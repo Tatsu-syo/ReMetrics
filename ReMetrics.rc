@@ -1,0 +1,249 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDC_MYICON              ICON                    "ReMetrics.ico"
+IDI_SMALL               ICON                    "ReMetrics.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_REMETRICS ACCELERATORS 
+BEGIN
+    "/",            IDM_ABOUT,              ASCII,  ALT, NOINVERT
+    "?",            IDM_ABOUT,              ASCII,  ALT, NOINVERT
+    "^S",           IDM_SET,                ASCII,  NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAIN_DIALOG DIALOGEX 0, 0, 147, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Re-Metrics"
+MENU IDR_MENU1
+FONT 10, "ＭＳ Ｐゴシック", 400, 0, 0x80
+BEGIN
+    LTEXT           "ウインドウの境界",IDC_STATIC,7,7,77,12
+    EDITTEXT        IDC_EDIT_BORDER,104,7,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_BORDER,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,7,10,12
+    LTEXT           "タイトルバーの幅",IDC_STATIC,7,22,77,12
+    EDITTEXT        IDC_EDIT_TITLE_WIDTH,104,22,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_TITLE_WIDTH,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,22,10,12
+    LTEXT           "タイトルバーの高さ",IDC_STATIC,7,37,77,12
+    EDITTEXT        IDC_EDIT_TITLE_HEIGHT,104,37,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_TITLE_HEIGHT,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,37,10,12
+    LTEXT           "スクロールバーの幅",IDC_STATIC,7,53,77,12
+    EDITTEXT        IDC_EDIT_SCROLL_WIDTH,104,53,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_SCROLL_WIDTH,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,52,10,12
+    LTEXT           "スクロールバーの高さ",IDC_STATIC,7,67,90,12
+    EDITTEXT        IDC_EDIT_SCROLL_HEIGHT,104,67,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_SCROLL_HEIGHT,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,67,10,12
+    LTEXT           "パレットの幅",IDC_STATIC,7,82,77,12
+    EDITTEXT        IDC_EDIT_PALETTE_WIDTH,104,82,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_PALETTE_WIDTH,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,82,10,12
+    LTEXT           "パレットの高さ",IDC_STATIC,7,97,77,12
+    EDITTEXT        IDC_EDIT_PALETTE_HEIGHT,104,97,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_PALETTE_HEIGHT,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,97,10,12
+    LTEXT           "メニューの幅",IDC_STATIC,7,112,77,12
+    EDITTEXT        IDC_EDIT_MENU_WIDTH,104,112,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_MENU_WIDTH,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,112,10,12
+    LTEXT           "メニューの高さ",IDC_STATIC,7,127,77,12
+    EDITTEXT        IDC_EDIT_MENU_HEIGHT,104,127,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_MENU_HEIGHT,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,127,10,12
+    LTEXT           "ウインドウ枠内部の幅",IDC_STATIC,7,142,77,12
+    EDITTEXT        IDC_EDIT_PADDING,104,142,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPIN_PADDING,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,142,10,12
+    DEFPUSHBUTTON   "OK",IDOK,56,164,41,14,WS_GROUP
+    PUSHBUTTON      "キャンセル",IDCANCEL,100,164,41,14,WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_MAIN_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 141
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "CompanyName", "T.Syoji's Personal Development"
+            VALUE "FileDescription", "ReMetrics プログラムファイル"
+            VALUE "FileVersion", "1, 0, 0, 0"
+            VALUE "InternalName", "ReMetrics"
+            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012"
+            VALUE "OriginalFilename", "ReMetrics.exe"
+            VALUE "ProductName", "Meiryo UIも大っきらい!!"
+            VALUE "ProductVersion", "1, 0, 0, 0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+IDR_RT_MANIFEST         RT_MANIFEST             "ReMetrics.exe.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "ファイル(&F)"
+    BEGIN
+        MENUITEM "設定(&S)",                      IDM_SET
+        MENUITEM SEPARATOR
+        MENUITEM "終了(&X)",                      IDM_EXIT
+    END
+    POPUP "プリセット(&P)"
+    BEGIN
+        MENUITEM "Windows 2000",                IDM_SET_2K
+        MENUITEM "Windows XP Classic",          IDM_SET_XP
+        MENUITEM "Windows XP",                  IDM_SET_XP_LUNA
+        MENUITEM "Windows Vista",               IDM_SET_VISTA
+        MENUITEM "Windows 7 ベーシック",             IDM_SET_7_STD
+        MENUITEM "Windows 7",                   IDM_SET_7
+        MENUITEM "Windows 8",                   IDM_SET_8
+    END
+    POPUP "ヘルプ(&H)"
+    BEGIN
+        MENUITEM "バージョン情報(&A)",                 IDM_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_APP_TITLE           "ReMetrics"
+    IDC_NOMEIRYOUI          "NOMEIRYOUI"
+END
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
