@@ -165,18 +165,26 @@ INT_PTR CALLBACK BaseDialog::modelessDialogProc(HWND hDlg, UINT message, WPARAM 
  * @param message メッセージ
  * @param wParam WPARAM
  * @param lParam LPARAM
- * @return 処理結果
+ * @return 処理結果 TRUE:メッセージを処理した。 FALSE:メッセージを処理しない
  */
 INT_PTR CALLBACK BaseDialog::dialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	INT_PTR result;
+
 	hWnd = hDlg;
 	switch (message)
 	{
 		case WM_INITDIALOG:
-			return OnInitDialog();
+            result = OnInitDialog();
+			return result;
 
 		case WM_COMMAND:
-			return OnCommand(wParam);
+			result = OnCommand(wParam);
+			if (result == 0) {
+				return (INT_PTR)TRUE;
+			} else {
+				return (INT_PTR)FALSE;
+			}
 	}
 
 	return (INT_PTR)FALSE;
@@ -210,7 +218,7 @@ INT_PTR BaseDialog::OnInitDialog()
 /**
  * ダイアログ操作が行われた時に呼び出されます。
  *
- * @return 処理結果
+ * @return 処理結果 0:処理を行った 非0:処理を行わない
  */
 INT_PTR BaseDialog::OnCommand(WPARAM wParam)
 {
@@ -218,10 +226,10 @@ INT_PTR BaseDialog::OnCommand(WPARAM wParam)
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hWnd, LOWORD(wParam));
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		}
 	}
-	return (INT_PTR)FALSE;
+	return (INT_PTR)TRUE;
 }
 
 /**
