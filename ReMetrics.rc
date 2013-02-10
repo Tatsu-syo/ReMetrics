@@ -151,8 +151,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 1,0,1,0
+ PRODUCTVERSION 1,0,1,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -168,13 +168,13 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "CompanyName", "T.Syoji's Personal Development"
-            VALUE "FileDescription", "ReMetrics プログラムファイル"
-            VALUE "FileVersion", "1, 0, 0, 0"
+            VALUE "FileDescription", "Re-Metrics プログラムファイル"
+            VALUE "FileVersion", "1, 0, 1, 0"
             VALUE "InternalName", "ReMetrics"
-            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012"
+            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012,2013"
             VALUE "OriginalFilename", "ReMetrics.exe"
-            VALUE "ProductName", "Meiryo UIも大っきらい!!"
-            VALUE "ProductVersion", "1, 0, 0, 0"
+            VALUE "ProductName", "Re-Metrics"
+            VALUE "ProductVersion", "1, 0, 1, 0"
         END
     END
     BLOCK "VarFileInfo"

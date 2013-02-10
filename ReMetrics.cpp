@@ -358,7 +358,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			break;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.00\n\nBy Tatsuhiko Syoji(Tatsu) 2012"),
+				_T("Re-Metrics Version 1.01\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
 				_T("Re-Metrics‚É‚Â‚¢‚Ä"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)TRUE;
