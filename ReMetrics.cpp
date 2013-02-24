@@ -260,6 +260,13 @@ void ReMetrics::UpdateData(bool toObj)
 	DDX_Text(toObj,IDC_EDIT_PADDING, padding);
 }
 
+/**
+ * WM_COMMANDメッセージの処理分岐。<br>
+ * 入力内容の検査を行った後、画面各部の幅・高さの設定を行う。
+ *
+ * @param wParam WPARAMの値
+ * @return 処理結果 0:処理を行った 非0:処理を行わない
+ */
 INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 {
 	switch (LOWORD(wParam)) {
@@ -275,7 +282,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("18");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDM_SET_XP:
 			borderWidth = _T("1");
 			titleWidth = _T("18");
@@ -288,7 +295,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("18");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDM_SET_XP_LUNA:
 			borderWidth = _T("1");
 			titleWidth = _T("25");
@@ -301,7 +308,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("19");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDM_SET_VISTA:
 			borderWidth = _T("5");
 			titleWidth = _T("33");
@@ -314,7 +321,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("20");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDM_SET_7_STD:
 			borderWidth = _T("5");
 			titleWidth = _T("35");
@@ -327,7 +334,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("20");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDM_SET_7:
 			borderWidth = _T("5");
 			titleWidth = _T("33");
@@ -340,7 +347,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("20");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDM_SET_8:
 			borderWidth = _T("5");
 			titleWidth = _T("36");
@@ -353,24 +360,33 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			menuHeight = _T("19");
 			padding = _T("0");
 			UpdateData(false);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 		case IDOK:
 		case IDM_SET:
 			if (!OnBnClickedOk()) {
-				return true;
+				return (INT_PTR)0;
 			}
 			break;
+		case IDM_EXIT:
+			EndDialog(hWnd, LOWORD(wParam));
+			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
 				_T("Re-Metrics Version 1.01\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
-			return (INT_PTR)TRUE;
+			return (INT_PTR)0;
 	}
 	return BaseDialog::OnCommand(wParam);
 
 }
 
+/**
+ * OKボタン押下時の処理。<br>
+ * 入力内容の検査を行った後、画面各部の幅・高さの設定を行う。
+ *
+ * @return true:設定を行った。 false:設定を行わない
+ */
 bool ReMetrics::OnBnClickedOk()
 {
 	UpdateData(true);
@@ -463,6 +479,9 @@ bool ReMetrics::OnBnClickedOk()
 		SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
 
 	// 色を再設定することで画面をリフレッシュする。
+	// のだが、IObit StartMenu 8が起動しているときはSetSysColorsを
+	// 呼び出すと応答がなくなるので呼び出しを行わないことにした。
+#if 0
 	DWORD btnColor;
 	btnColor = GetSysColor(COLOR_BTNTEXT);
 
@@ -471,6 +490,7 @@ bool ReMetrics::OnBnClickedOk()
 	COLORREF colors[1];
 	colors[0] = btnColor;
 	SetSysColors(1,colorItems,colors);
+#endif
 
 	return true;
 }
