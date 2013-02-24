@@ -1,8 +1,11 @@
+/*
+Re-Metrics (C) 2012,2013 Tatsuhiko Shoji
+The sources for Re-Metrics are distributed under the MIT open source license
+*/
 #ifndef BASEDIALOG_H
 #define BASEDIALOG_H
 
 #include "TwrWnd.h"
-#include "TwrCombobox.h"
 
 class BaseDialog : public TwrWnd {
 private:

@@ -1,4 +1,8 @@
-// noMeiryoUI.cpp : アプリケーションのエントリ ポイントを定義します。
+/*
+Re-Metrics (C) 2012,2013 Tatsuhiko Shoji
+The sources for Re-Metrics are distributed under the MIT open source license
+*/
+// ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。
 //
 
 #include "stdafx.h"
@@ -470,4 +474,3 @@ bool ReMetrics::OnBnClickedOk()
 
 	return true;
 }
-

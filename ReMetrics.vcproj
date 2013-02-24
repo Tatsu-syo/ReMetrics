@@ -252,6 +252,10 @@
 				Name="TWR"
 				>
 				<File
+					RelativePath=".\TWR\AppliBase.h"
+					>
+				</File>
+				<File
 					RelativePath=".\TWR\BaseDialog.h"
 					>
 				</File>
@@ -261,6 +265,14 @@
 				</File>
 				<File
 					RelativePath=".\TWR\ModelessDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TWR\stdafx.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TWR\tstring.h"
 					>
 				</File>
 				<File

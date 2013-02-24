@@ -19,6 +19,6 @@
 #define _WIN32_WINDOWS 0x0600 // これを Windows Me またはそれ以降のバージョン向けに適切な値に変更してください。
 #endif
 
-#ifndef _WIN32_IE                       // 最低限必要なプラットフォームが Internet Explorer 7.0 であることを指定します。
+#ifndef _WIN32_IE                       // 最低限必要なプラットフォームが Internet Explorer 5.0 であることを指定します。
 #define _WIN32_IE 0x0500        // これを IE の他のバージョン向けに適切な値に変更してください。
 #endif
