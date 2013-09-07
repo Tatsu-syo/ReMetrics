@@ -370,15 +370,89 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 		case IDM_EXIT:
 			EndDialog(hWnd, LOWORD(wParam));
 			return (INT_PTR)0;
+		case IDM_WINVER:
+			OnBnClickedWinVer();
+			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.01\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
+				_T("Re-Metrics Version 1.02\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
 				_T("Re-MetricsÇ…Ç¬Ç¢Çƒ"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
 	}
 	return BaseDialog::OnCommand(wParam);
 
+}
+
+void ReMetrics::OnBnClickedWinVer()
+{
+	// 
+	DWORD dwVersion = GetVersion();
+	TCHAR buf[128];
+
+	DWORD major = (DWORD)(LOBYTE(LOWORD(dwVersion)));
+	DWORD minor = (DWORD)(HIBYTE(LOWORD(dwVersion)));
+
+	switch(major) {
+		case 5:
+			switch (minor) {
+				case 0:
+					_stprintf(buf,
+						_T("Windows 2000 (%d.%d)"),
+						major,minor);
+					break;
+				case 1:
+					_stprintf(buf,
+						_T("Windows XP (%d.%d)"),
+						major,minor);
+					break;
+				case 2:
+					_stprintf(buf,
+						_T("Windows Server 2003/XP 64bit (%d.%d)"),
+						major,minor);
+					break;
+			}
+			break;
+		case 6:
+			switch (minor) {
+				case 0:
+					_stprintf(buf,
+						_T("Windows Vista/Server 2008 (%d.%d)"),
+						major,minor);
+					break;
+				case 1:
+					_stprintf(buf,
+						_T("Windows 7/Server 2008 R2 (%d.%d)"),
+						major,minor);
+					break;
+				case 2:
+					_stprintf(buf,
+						_T("Windows 8/Server 2012 (%d.%d)"),
+						major,minor);
+					break;
+				case 3:
+					_stprintf(buf,
+						_T("Windows 8.1/Server 2012 R2 (%d.%d)"),
+						major,minor);
+					break;
+				default:
+					_stprintf(buf,
+						_T("Future Windows (%d.%d)"),
+						major,minor);
+					break;
+			}
+			break;
+		default:
+			_stprintf(buf,
+				_T("Future Windows (%d.%d)"),
+				major,minor);
+			break;
+	}
+
+	MessageBox(hWnd, 
+		buf,
+		_T("WindowsÇÃÉoÅ[ÉWÉáÉì"),
+		MB_OK | MB_ICONINFORMATION);
 }
 
 /**

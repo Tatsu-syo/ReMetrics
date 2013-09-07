@@ -83,6 +83,8 @@
 #define IDM_SET_7_STD                   32790
 #define IDM_SET_7                       32791
 #define IDM_SET_8                       32792
+#define ID_32795                        32795
+#define IDM_WINVER                      32796
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -91,7 +93,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         32795
+#define _APS_NEXT_COMMAND_VALUE         32797
 #define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

@@ -40,6 +40,7 @@ private:
 	LOGFONT iconFontAll;
 
 	bool OnBnClickedOk();
+	void OnBnClickedWinVer();
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam);
