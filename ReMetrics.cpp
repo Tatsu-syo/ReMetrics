@@ -386,12 +386,20 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 
 void ReMetrics::OnBnClickedWinVer()
 {
-	// 
+	// Windowsの内部バージョンを調べる。
 	DWORD dwVersion = GetVersion();
 	TCHAR buf[128];
 
 	DWORD major = (DWORD)(LOBYTE(LOWORD(dwVersion)));
 	DWORD minor = (DWORD)(HIBYTE(LOWORD(dwVersion)));
+
+	// サーバーかどうかの追加情報を取得するため
+	// GetVersionExをOSVERSIONINFOEXを渡して呼び出す。
+	// Windows 98/Me,NT4以前は考慮しないので呼び分けはなし。
+	OSVERSIONINFOEX infoEx;
+	memset(&infoEx, 0, sizeof(OSVERSIONINFOEX));
+	infoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	GetVersionEx((OSVERSIONINFO *)&infoEx);
 
 	switch(major) {
 		case 5:
@@ -407,45 +415,87 @@ void ReMetrics::OnBnClickedWinVer()
 						major,minor);
 					break;
 				case 2:
-					_stprintf(buf,
-						_T("Windows Server 2003/XP 64bit (%d.%d)"),
-						major,minor);
+					if (infoEx.wProductType == VER_NT_WORKSTATION) {
+						_stprintf(buf,
+							_T("Windows XP 64bit (%d.%d)"),
+							major,minor);
+					} else {
+						_stprintf(buf,
+							_T("Windows Server 2003 (%d.%d)"),
+							major,minor);
+					}
 					break;
 			}
 			break;
 		case 6:
 			switch (minor) {
 				case 0:
-					_stprintf(buf,
-						_T("Windows Vista/Server 2008 (%d.%d)"),
-						major,minor);
+					if (infoEx.wProductType == VER_NT_WORKSTATION) {
+						_stprintf(buf,
+							_T("Windows Vista (%d.%d)"),
+							major,minor);
+					} else {
+						_stprintf(buf,
+							_T("Windows Server 2008 (%d.%d)"),
+							major,minor);
+					}
 					break;
 				case 1:
-					_stprintf(buf,
-						_T("Windows 7/Server 2008 R2 (%d.%d)"),
-						major,minor);
+					if (infoEx.wProductType == VER_NT_WORKSTATION) {
+						_stprintf(buf,
+							_T("Windows 7 (%d.%d)"),
+							major,minor);
+					} else {
+						_stprintf(buf,
+							_T("Windows Server 2008 R2 (%d.%d)"),
+							major,minor);
+					}
 					break;
 				case 2:
-					_stprintf(buf,
-						_T("Windows 8/Server 2012 (%d.%d)"),
-						major,minor);
+					if (infoEx.wProductType == VER_NT_WORKSTATION) {
+						_stprintf(buf,
+							_T("Windows 8 (%d.%d)"),
+							major,minor);
+					} else {
+						_stprintf(buf,
+							_T("Windows Server 2012 (%d.%d)"),
+							major,minor);
+					}
 					break;
 				case 3:
-					_stprintf(buf,
-						_T("Windows 8.1/Server 2012 R2 (%d.%d)"),
-						major,minor);
+					if (infoEx.wProductType == VER_NT_WORKSTATION) {
+						_stprintf(buf,
+							_T("Windows 8.1 (%d.%d)"),
+							major,minor);
+					} else {
+						_stprintf(buf,
+							_T("Windows Server 2012 R2 (%d.%d)"),
+							major,minor);
+					}
 					break;
 				default:
-					_stprintf(buf,
-						_T("Future Windows (%d.%d)"),
-						major,minor);
+					if (infoEx.wProductType == VER_NT_WORKSTATION) {
+						_stprintf(buf,
+							_T("Future Windows Client (%d.%d)"),
+							major,minor);
+					} else {
+						_stprintf(buf,
+							_T("Future Windows Server (%d.%d)"),
+							major,minor);
+					}
 					break;
 			}
 			break;
 		default:
-			_stprintf(buf,
-				_T("Future Windows (%d.%d)"),
-				major,minor);
+			if (infoEx.wProductType == VER_NT_WORKSTATION) {
+				_stprintf(buf,
+					_T("Future Windows Client (%d.%d)"),
+					major,minor);
+			} else {
+				_stprintf(buf,
+					_T("Future Windows Server (%d.%d)"),
+					major,minor);
+			}
 			break;
 	}
 
