@@ -627,6 +627,35 @@ bool ReMetrics::OnBnClickedOk()
 }
 
 /**
+ * ダイアログ操作が行われた時に呼び出されます。
+ *
+ * @return 処理結果 0:処理を行った 非0:処理を行わない
+ */
+INT_PTR ReMetrics::OnSettingChange(WPARAM wParam, LPARAM lParam)
+{
+	DWORD dwVersion = GetVersion();
+
+	DWORD major = (DWORD)(LOBYTE(LOWORD(dwVersion)));
+	NONCLIENTMETRICS metrics;
+
+	FillMemory(&metrics,sizeof(NONCLIENTMETRICS),0x00);
+
+	/* アイコン以外のフォント情報を取得する。 */
+	if (major > 5) {
+		metrics.cbSize = sizeof(NONCLIENTMETRICS);
+	} else {
+		metrics.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
+	}
+	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
+		sizeof(NONCLIENTMETRICS),
+		&metrics,
+		0);
+	adjustWindowSize(&metrics, major);
+
+	return (INT_PTR)TRUE;
+}
+
+/**
  * ウインドウの高さを調節する。
  *
  * @param metrics NONCLIENTMETRICS構造体
