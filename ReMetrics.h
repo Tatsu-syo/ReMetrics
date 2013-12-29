@@ -41,6 +41,7 @@ private:
 
 	bool OnBnClickedOk();
 	void OnBnClickedWinVer();
+	void adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor);
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam);

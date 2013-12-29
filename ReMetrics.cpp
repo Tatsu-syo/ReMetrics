@@ -97,13 +97,15 @@ int ReMetrics::OnWindowShow()
 	// このタイミングでダイアログが存在するので、ここに処理を入れることで
 	// ダイアログがある状態で起動時の初期化処理を行うことができます。
 	DWORD dwver;
+	int winVerMajor;
 
 	dwver = GetVersion();
+	winVerMajor = LOBYTE(dwver);
 
 	FillMemory(&metrics,sizeof(NONCLIENTMETRICS),0x00);
 
 	// アイコン以外のフォント情報を取得する。
-	if (LOBYTE(dwver) > 5) {
+	if (winVerMajor > 5) {
 		/* Windows Vista/7/8 */
 		metrics.cbSize = sizeof(NONCLIENTMETRICS);
 	} else {
@@ -199,6 +201,8 @@ int ReMetrics::OnWindowShow()
 	paddingUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_PADDING));
 	paddingUpDown->setRange(0, 256);
 	paddingUpDown->setPos(metrics.iPaddedBorderWidth);
+
+	adjustWindowSize(&metrics, winVerMajor);
 
 	return 0;
 }
@@ -375,7 +379,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.02\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
+				_T("Re-Metrics Version 1.03\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -384,6 +388,9 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 
 }
 
+/**
+ * 「ヘルプ」－「バージョン情報」選択時の処理
+ */
 void ReMetrics::OnBnClickedWinVer()
 {
 	// Windowsの内部バージョンを調べる。
@@ -617,4 +624,58 @@ bool ReMetrics::OnBnClickedOk()
 #endif
 
 	return true;
+}
+
+/**
+ * ウインドウの高さを調節する。
+ *
+ * @param metrics NONCLIENTMETRICS構造体
+ * @param winMajorVer Windowsのメジャーバージョン番号
+ */
+void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
+{
+	HWND hWnd = this->getHwnd();
+	RECT clientRect;
+	RECT windowRect;
+	int x,y,width,height;
+	int clientWidth, clientHeight;
+	int borderWidth;
+	int menuHeight;
+	int newHeight;
+	int requiredClientHeight;
+
+	GetClientRect(hWnd, &clientRect);
+	GetWindowRect(hWnd, &windowRect);
+
+	// ウインドウ自身の位置と幅
+	x = windowRect.left;
+	y = windowRect.top;
+	width = windowRect.right - windowRect.left + 1;
+	height = windowRect.bottom - windowRect.top + 1;
+
+	// 枠の幅
+	borderWidth = metrics->iBorderWidth * 2;
+	if (winVerMajor > 5) {
+		borderWidth += (metrics->iPaddedBorderWidth * 2);
+	}
+
+	// クライアント領域の幅
+	clientWidth = clientRect.right - clientRect.left + 1;
+	clientHeight = clientRect.bottom - clientRect.top + 1;
+
+	// 実際のメニュー領域の高さ
+	// (ツールバーやステータスバーがあった場合はその分も引く必要がある。)
+	menuHeight = height - borderWidth - clientHeight - metrics->iCaptionHeight;
+
+	// 欲しいクライアント領域の高さ
+	requiredClientHeight = 300;
+
+	// 補正後の高さ
+	newHeight = 
+		borderWidth +
+		metrics->iCaptionHeight +
+		menuHeight +
+		requiredClientHeight;
+
+	MoveWindow(hWnd, x, y, width, newHeight, true);
 }
