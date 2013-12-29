@@ -16,6 +16,17 @@ protected:
 	static BaseDialog *modalCallback;
 	virtual INT_PTR OnInitDialog();
 	virtual INT_PTR OnCommand(WPARAM wParam);
+	/**
+	 * ダイアログ操作が行われた時に呼び出されます。
+	 *
+	 * @return 処理結果 0:処理を行った 非0:処理を行わない
+	 */
+	virtual INT_PTR OnSettingChange(WPARAM wParam, LPARAM lParam)
+	{
+		return (INT_PTR)TRUE;
+	}
+
+
 	TCHAR ddx_buf[512];
 public:
 	BaseDialog();

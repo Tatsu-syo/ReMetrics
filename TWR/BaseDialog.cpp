@@ -189,6 +189,9 @@ INT_PTR CALLBACK BaseDialog::dialogProc(HWND hDlg, UINT message, WPARAM wParam, 
 			} else {
 				return (INT_PTR)FALSE;
 			}
+		case WM_SETTINGCHANGE:
+			result = OnSettingChange(wParam, lParam);
+			return result;
 	}
 
 	return (INT_PTR)FALSE;
