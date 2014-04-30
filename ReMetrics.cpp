@@ -110,7 +110,7 @@ int ReMetrics::OnWindowShow()
 		metrics.cbSize = sizeof(NONCLIENTMETRICS);
 	} else {
 		/* Windows 2000/XP */
-		metrics.cbSize = sizeof(NONCLIENTMETRICS) - 4;
+		metrics.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
 	}
 
 	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
@@ -148,7 +148,7 @@ int ReMetrics::OnWindowShow()
 	menuHeight = buf;
 
 	_stprintf(buf,_T("%d"), metrics.iPaddedBorderWidth);
-	padding = _T("0");
+	padding = buf;
 
 	UpdateData(false);
 
@@ -314,7 +314,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_VISTA:
-			borderWidth = _T("5");
+			borderWidth = _T("1");
 			titleWidth = _T("33");
 			titleHeight = _T("20");
 			scrollWidth = _T("17");
@@ -323,11 +323,11 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			paletteHeight = _T("20");
 			menuWidth = _T("19");
 			menuHeight = _T("20");
-			padding = _T("0");
+			padding = _T("4");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_7_STD:
-			borderWidth = _T("5");
+			borderWidth = _T("1");
 			titleWidth = _T("35");
 			titleHeight = _T("21");
 			scrollWidth = _T("17");
@@ -336,24 +336,24 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			paletteHeight = _T("20");
 			menuWidth = _T("19");
 			menuHeight = _T("20");
-			padding = _T("0");
+			padding = _T("4");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_7:
-			borderWidth = _T("5");
-			titleWidth = _T("33");
-			titleHeight = _T("20");
+			borderWidth = _T("1");
+			titleWidth = _T("35");
+			titleHeight = _T("21");
 			scrollWidth = _T("17");
 			scrollHeight = _T("17");
-			paletteWidth = _T("20");
+			paletteWidth = _T("17");
 			paletteHeight = _T("20");
-			menuWidth = _T("20");
+			menuWidth = _T("19");
 			menuHeight = _T("20");
-			padding = _T("0");
+			padding = _T("4");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_8:
-			borderWidth = _T("5");
+			borderWidth = _T("1");
 			titleWidth = _T("36");
 			titleHeight = _T("22");
 			scrollWidth = _T("17");
@@ -362,7 +362,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			paletteHeight = _T("22");
 			menuWidth = _T("19");
 			menuHeight = _T("19");
-			padding = _T("0");
+			padding = _T("4");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDOK:
@@ -379,7 +379,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.03\n\nBy Tatsuhiko Syoji(Tatsu) 2012,2013"),
+				_T("Re-Metrics Version 1.04\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2014"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -585,7 +585,7 @@ bool ReMetrics::OnBnClickedOk()
 		metrics.cbSize = sizeof(NONCLIENTMETRICS);
 	} else {
 		/* Windows 2000/XP */
-		metrics.cbSize = sizeof(NONCLIENTMETRICS) - 4;
+		metrics.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
 	}
 
 	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
@@ -637,17 +637,20 @@ INT_PTR ReMetrics::OnSettingChange(WPARAM wParam, LPARAM lParam)
 
 	DWORD major = (DWORD)(LOBYTE(LOWORD(dwVersion)));
 	NONCLIENTMETRICS metrics;
+	UINT structSize;
 
 	FillMemory(&metrics,sizeof(NONCLIENTMETRICS),0x00);
 
 	/* アイコン以外のフォント情報を取得する。 */
 	if (major > 5) {
-		metrics.cbSize = sizeof(NONCLIENTMETRICS);
+		structSize = sizeof(NONCLIENTMETRICS);
 	} else {
-		metrics.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
+		structSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
 	}
+	metrics.cbSize = structSize;
+
 	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
-		sizeof(NONCLIENTMETRICS),
+		structSize,
 		&metrics,
 		0);
 	adjustWindowSize(&metrics, major);

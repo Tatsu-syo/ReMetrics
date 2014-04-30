@@ -87,7 +87,7 @@ BEGIN
     LTEXT           "メニューの高さ",IDC_STATIC,7,127,77,12
     EDITTEXT        IDC_EDIT_MENU_HEIGHT,104,127,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
     CONTROL         "",IDC_SPIN_MENU_HEIGHT,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,127,10,12
-    LTEXT           "ウインドウ枠内部の幅",IDC_STATIC,7,142,77,12
+    LTEXT           "ウインドウの境界の間隔",IDC_STATIC,7,142,77,12
     EDITTEXT        IDC_EDIT_PADDING,104,142,28,12,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
     CONTROL         "",IDC_SPIN_PADDING,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | WS_GROUP | WS_TABSTOP,131,142,10,12
     DEFPUSHBUTTON   "OK",IDOK,56,164,41,14,WS_GROUP
@@ -151,8 +151,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,3,0
- PRODUCTVERSION 1,0,3,0
+ FILEVERSION 1,0,4,0
+ PRODUCTVERSION 1,0,4,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -169,12 +169,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "T.Syoji's Personal Development"
             VALUE "FileDescription", "Re-Metrics"
-            VALUE "FileVersion", "1, 0, 3, 0"
+            VALUE "FileVersion", "1, 0, 4, 0"
             VALUE "InternalName", "ReMetrics"
-            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012,2013"
+            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012-2014"
             VALUE "OriginalFilename", "ReMetrics.exe"
             VALUE "ProductName", "Re-Metrics"
-            VALUE "ProductVersion", "1, 0, 3, 0"
+            VALUE "ProductVersion", "1, 0, 4, 0"
         END
     END
     BLOCK "VarFileInfo"
