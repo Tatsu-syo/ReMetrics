@@ -15,7 +15,7 @@ private:
 protected:
 	static BaseDialog *modalCallback;
 	virtual INT_PTR OnInitDialog();
-	virtual INT_PTR OnCommand(WPARAM wParam);
+	virtual INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);
 	/**
 	 * ダイアログ操作が行われた時に呼び出されます。
 	 *
@@ -25,7 +25,15 @@ protected:
 	{
 		return (INT_PTR)TRUE;
 	}
-
+	/**
+	 * コントロールのアクティブ状態が変化した時に呼び出されます。
+	 *
+	 * @return 処理結果 0:処理を行った
+	 */
+	virtual INT_PTR OnLostFocus(WPARAM wParam, LPARAM lParam)
+	{
+		return (INT_PTR)0;
+	}
 
 	TCHAR ddx_buf[512];
 public:

@@ -52,7 +52,8 @@ private:
 	void setItemRange();
 
 protected:
-	INT_PTR OnCommand(WPARAM wParam);
+	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);
+	INT_PTR OnLostFocus(WPARAM wParam, LPARAM lParam);
 
 public:
 	BaseDialog *createBaseDialog();

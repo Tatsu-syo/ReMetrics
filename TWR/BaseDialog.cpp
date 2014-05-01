@@ -183,7 +183,7 @@ INT_PTR CALLBACK BaseDialog::dialogProc(HWND hDlg, UINT message, WPARAM wParam, 
 			return result;
 
 		case WM_COMMAND:
-			result = OnCommand(wParam);
+			result = OnCommand(wParam, lParam);
 			if (result == 0) {
 				return (INT_PTR)TRUE;
 			} else {
@@ -192,6 +192,9 @@ INT_PTR CALLBACK BaseDialog::dialogProc(HWND hDlg, UINT message, WPARAM wParam, 
 		case WM_SETTINGCHANGE:
 			result = OnSettingChange(wParam, lParam);
 			return result;
+		case EN_SETFOCUS:
+			OnLostFocus(wParam, lParam);
+			return 0;
 	}
 
 	return (INT_PTR)FALSE;
@@ -225,9 +228,11 @@ INT_PTR BaseDialog::OnInitDialog()
 /**
  * ダイアログ操作が行われた時に呼び出されます。
  *
+ * @param wParam wParam
+ * @param lParam lParam
  * @return 処理結果 0:処理を行った 非0:処理を行わない
  */
-INT_PTR BaseDialog::OnCommand(WPARAM wParam)
+INT_PTR BaseDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	if (!isModeless) {
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)

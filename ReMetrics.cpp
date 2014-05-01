@@ -320,8 +320,10 @@ void ReMetrics::UpdateData(bool toObj)
  * @param wParam WPARAMの値
  * @return 処理結果 0:処理を行った 非0:処理を行わない
  */
-INT_PTR ReMetrics::OnCommand(WPARAM wParam)
+INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	WORD hiWord = HIWORD(wParam);
+
 	switch (LOWORD(wParam)) {
 		case IDM_SET_2K:
 			borderWidth = _T("1");
@@ -432,8 +434,13 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam)
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
+		default:
+			if (hiWord == EN_KILLFOCUS) {
+				return OnLostFocus(wParam, lParam);
+			}
+			break;
 	}
-	return BaseDialog::OnCommand(wParam);
+	return BaseDialog::OnCommand(wParam, lParam);
 
 }
 
@@ -759,4 +766,55 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 		requiredClientHeight;
 
 	MoveWindow(hWnd, x, y, width, newHeight, true);
+}
+
+/**
+ * ダイアログ操作が行われた時に呼び出されます。
+ *
+ * @return 処理結果 0
+ */
+INT_PTR ReMetrics::OnLostFocus(WPARAM wParam, LPARAM lParam)
+{
+	HWND targetWnd = (HWND)lParam;
+
+	UpdateData(true);
+
+	int height;
+	TCHAR buf[5];
+
+	if (::GetDlgItem(hWnd, IDC_EDIT_TITLE_HEIGHT) == targetWnd) {
+		if (titleHeight.length() == 0) {
+			return 0;
+		}
+		height = _tstoi(titleHeight.c_str());
+		if (height < minTitleHeight) {
+			_itot_s(minTitleHeight, buf, 5, 10);
+			titleHeight = buf;
+			UpdateData(false);
+		}
+	}
+	if (::GetDlgItem(hWnd, IDC_EDIT_PALETTE_HEIGHT) == targetWnd) {
+		if (paletteHeight.length() == 0) {
+			return 0;
+		}
+		height = _tstoi(paletteHeight.c_str());
+		if (height < minPaletteHeight) {
+			_itot_s(minPaletteHeight, buf, 5, 10);
+			paletteHeight = buf;
+			UpdateData(false);
+		}
+	}
+	if (::GetDlgItem(hWnd, IDC_EDIT_MENU_HEIGHT) == targetWnd) {
+		if (menuHeight.length() == 0) {
+			return 0;
+		}
+		height = _tstoi(menuHeight.c_str());
+		if (height < minMenuHeight) {
+			_itot_s(minMenuHeight, buf, 5, 10);
+			menuHeight = buf;
+			UpdateData(false);
+		}
+	}
+
+	return 0;
 }
