@@ -33,6 +33,10 @@ private:
 	TwrUpDown *menuHeightUpDown;
 	TwrUpDown *paddingUpDown;
 
+	int minTitleHeight;
+	int minPaletteHeight;
+	int minMenuHeight;
+
 	NONCLIENTMETRICS metrics;
 	LOGFONT iconFont;
 
@@ -44,6 +48,8 @@ private:
 	INT_PTR OnSettingChange(WPARAM wParam, LPARAM lParam);
 
 	void adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor);
+	int getMinHeight(LOGFONT *font);
+	void setItemRange();
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam);
@@ -52,6 +58,7 @@ public:
 	BaseDialog *createBaseDialog();
 	int OnAppliStart(TCHAR *lpCmdLine);
 	int OnWindowShow();
+
 	int OnAppliEnd();
 	INT_PTR OnInitDialog();
 	void UpdateData(bool toObj);

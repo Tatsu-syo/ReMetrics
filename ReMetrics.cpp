@@ -8,6 +8,7 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include "stdafx.h"
 
 #include <windows.h>
+#include <windowsx.h>
 #include <commdlg.h>
 #include "ReMetrics.h"
 
@@ -154,57 +155,105 @@ int ReMetrics::OnWindowShow()
 
 	borderWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_BORDER));
 	borderWidthUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_BORDER));
-	borderWidthUpDown->setRange(0, 256);
-	borderWidthUpDown->setPos(metrics.iBorderWidth);
-
 	titleWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_TITLE_WIDTH));
 	titleWidthUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_TITLE_WIDTH));
-	titleWidthUpDown->setRange(0, 256);
-	titleWidthUpDown->setPos(metrics.iCaptionWidth);
-
 	titleHeightUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_TITLE_HEIGHT));
 	titleHeightUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_TITLE_HEIGHT));
-	titleHeightUpDown->setRange(0, 256);
-	titleHeightUpDown->setPos(metrics.iCaptionHeight);
-
 	scrollWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_SCROLL_WIDTH));
 	scrollWidthUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_SCROLL_WIDTH));
-	scrollWidthUpDown->setRange(0, 256);
-	scrollWidthUpDown->setPos(metrics.iScrollWidth);
-
 	scrollHeightUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_SCROLL_HEIGHT));
 	scrollHeightUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_SCROLL_HEIGHT));
-	scrollHeightUpDown->setRange(0, 256);
-	scrollHeightUpDown->setPos(metrics.iScrollHeight);
-
 	paletteWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_PALETTE_WIDTH));
 	paletteWidthUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_PALETTE_WIDTH));
-	paletteWidthUpDown->setRange(0, 256);
-	paletteWidthUpDown->setPos(metrics.iSmCaptionWidth);
-
 	paletteHeightUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_PALETTE_HEIGHT));
 	paletteHeightUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_PALETTE_HEIGHT));
-	paletteHeightUpDown->setRange(0, 256);
-	paletteHeightUpDown->setPos(metrics.iSmCaptionHeight);
-
 	menuWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_MENU_WIDTH));
 	menuWidthUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_MENU_WIDTH));
-	menuWidthUpDown->setRange(0, 256);
-	menuWidthUpDown->setPos(metrics.iMenuWidth);
-
 	menuHeightUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_MENU_HEIGHT));
 	menuHeightUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_MENU_HEIGHT));
-	menuHeightUpDown->setRange(0, 256);
-	menuHeightUpDown->setPos(metrics.iMenuHeight);
-
 	paddingUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_PADDING));
 	paddingUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_PADDING));
-	paddingUpDown->setRange(0, 256);
+
+	// 各スピンボタンの範囲を設定する。
+	setItemRange();
+
+	borderWidthUpDown->setPos(metrics.iBorderWidth);
+	titleWidthUpDown->setPos(metrics.iCaptionWidth);
+	titleHeightUpDown->setPos(metrics.iCaptionHeight);
+	scrollWidthUpDown->setPos(metrics.iScrollWidth);
+	scrollHeightUpDown->setPos(metrics.iScrollHeight);
+	paletteWidthUpDown->setPos(metrics.iSmCaptionWidth);
+	paletteHeightUpDown->setPos(metrics.iSmCaptionHeight);
+	menuWidthUpDown->setPos(metrics.iMenuWidth);
+	menuHeightUpDown->setPos(metrics.iMenuHeight);
 	paddingUpDown->setPos(metrics.iPaddedBorderWidth);
 
 	adjustWindowSize(&metrics, winVerMajor);
 
 	return 0;
+}
+
+void ReMetrics::setItemRange()
+{
+	borderWidthUpDown->setRange(1, 256);
+	titleWidthUpDown->setRange(1, 256);
+
+	minTitleHeight = getMinHeight(&(metrics.lfCaptionFont));
+	titleHeightUpDown->setRange(minTitleHeight, 256);
+
+	scrollWidthUpDown->setRange(1, 256);
+
+	scrollHeightUpDown->setRange(1, 256);
+
+	paletteWidthUpDown->setRange(1, 256);
+
+	minPaletteHeight = getMinHeight(&(metrics.lfSmCaptionFont));
+	paletteHeightUpDown->setRange(minPaletteHeight, 256);
+
+	menuWidthUpDown->setRange(0, 256);
+
+	minMenuHeight = getMinHeight(&(metrics.lfMenuFont));
+	menuHeightUpDown->setRange(minMenuHeight, 256);
+
+	paddingUpDown->setRange(0, 256);
+}
+/**
+ * フォントに対応する画面要素の最低の高さを求める。
+ *
+ * @param font 画面要素に設定されたフォント
+ * @return フォントに対応する画面要素の最低の高さ
+ */
+int ReMetrics::getMinHeight(LOGFONT *font)
+{
+	// フォントを作成する。
+	HFONT hFont = CreateFontIndirect(font);
+	// 自身のウインドウハンドルから作成したデバイスコンテキストに
+	// フォントを設定する。
+	HDC dc = GetDC(this->getHwnd());
+	SelectFont(dc, hFont);
+
+	// デバイスコンテキストからTEXTMETRICを取得する。
+	TEXTMETRIC metric;
+	GetTextMetrics(dc, &metric);
+
+	ReleaseDC(this->getHwnd(), dc);
+	DeleteObject(hFont);
+
+	int height;
+	if (font->lfHeight < 0) {
+		// 負の場合はlfHeightはフォント自体の高さでInternal Leadingを
+		// 含まないのでInternal Leadingを加算する。
+		height = 0 - font->lfHeight + metric.tmInternalLeading;
+	} else if (font->lfHeight > 0) {
+		// 正の場合はすでにInternal Leadingを含んでいる。
+		height = font->lfHeight;
+	} else {
+		// 0の場合はデフォルトの大きさを作成したフォントから取得する。
+		height = metric.tmAscent + metric.tmDescent;
+	}
+
+	// 余白2pxを足した値がフォントに対応する画面要素の最低の高さ
+	return height + 2;
 }
 
 /**
@@ -636,7 +685,6 @@ INT_PTR ReMetrics::OnSettingChange(WPARAM wParam, LPARAM lParam)
 	DWORD dwVersion = GetVersion();
 
 	DWORD major = (DWORD)(LOBYTE(LOWORD(dwVersion)));
-	NONCLIENTMETRICS metrics;
 	UINT structSize;
 
 	FillMemory(&metrics,sizeof(NONCLIENTMETRICS),0x00);
@@ -654,6 +702,7 @@ INT_PTR ReMetrics::OnSettingChange(WPARAM wParam, LPARAM lParam)
 		&metrics,
 		0);
 	adjustWindowSize(&metrics, major);
+	setItemRange();
 
 	return (INT_PTR)TRUE;
 }
