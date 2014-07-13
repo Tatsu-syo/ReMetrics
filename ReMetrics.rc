@@ -216,7 +216,7 @@ BEGIN
     END
     POPUP "ツール(&T)"
     BEGIN
-        MENUITEM "別スレッドでフォントを変更する。(&A)",        IDM_ANOTHER
+        MENUITEM "別スレッドで幅・高さを変更する。(&A)",        IDM_ANOTHER
     END
     POPUP "ヘルプ(&H)"
     BEGIN
