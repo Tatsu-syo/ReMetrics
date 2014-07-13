@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012,2013 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2014 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 // ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。
@@ -10,6 +10,8 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include <windows.h>
 #include <windowsx.h>
 #include <commdlg.h>
+#include <process.h>
+#include <shellapi.h>
 #include "ReMetrics.h"
 
 #define MAX_LOADSTRING 100
@@ -81,7 +83,7 @@ BaseDialog *ReMetrics::createBaseDialog()
 int ReMetrics::OnAppliStart(TCHAR *lpCmdLine)
 {
 	// この関数をオーバーライドしてアプリ固有の初期化を行います。
-	// 本アプリケーションでは特に処理なし。
+	appMenu = NULL;
 	return 0;
 }
 
@@ -93,7 +95,6 @@ int ReMetrics::OnAppliStart(TCHAR *lpCmdLine)
  */
 int ReMetrics::OnWindowShow()
 {
-
 	// この関数をオーバーライドして、初回の表示時の処理を行います。
 	// このタイミングでダイアログが存在するので、ここに処理を入れることで
 	// ダイアログがある状態で起動時の初期化処理を行うことができます。
@@ -264,7 +265,9 @@ int ReMetrics::getMinHeight(LOGFONT *font)
 int ReMetrics::OnAppliEnd()
 {
 	// この関数をオーバーライドしてアプリ固有の後処理を行います。
-	// 本アプリケーションでは特に処理なし。
+	if (appMenu != NULL) {
+		delete appMenu;
+	}
 	return 0;
 }
 
@@ -287,6 +290,8 @@ INT_PTR ReMetrics::OnInitDialog()
 
     hIcon = (HICON)LoadImage(hInst, MAKEINTRESOURCE(IDC_MYICON), IMAGE_ICON, 16, 16, 0);
     SendMessage(this->hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+
+	appMenu = new TwrMenu(hWnd);
 
 	UpdateData(false);
 
@@ -425,12 +430,22 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 		case IDM_EXIT:
 			EndDialog(hWnd, LOWORD(wParam));
 			return (INT_PTR)0;
+		case IDM_ANOTHER:
+			if (appMenu->isChecked(IDM_ANOTHER)) {
+				appMenu->CheckMenuItem(IDM_ANOTHER, false);
+			} else {
+				appMenu->CheckMenuItem(IDM_ANOTHER, true);
+			}
+			return (INT_PTR)0;
+		case IDM_HELPTOPIC:
+			showHelp();
+			return (INT_PTR)0;
 		case IDM_WINVER:
 			OnBnClickedWinVer();
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.04\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2014"),
+				_T("Re-Metrics Version 1.05\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2014"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -660,10 +675,82 @@ bool ReMetrics::OnBnClickedOk()
 	metrics.iMenuHeight = _tstoi(menuHeight.c_str());
 	metrics.iPaddedBorderWidth = _tstoi(padding.c_str());
 
+	setMetrics(&metrics);
+
+	return true;
+}
+
+NONCLIENTMETRICS *s_fontMetrics;
+
+/**
+ * スレッドで幅を設定する。
+ *
+ * @return 0
+ */
+unsigned _stdcall setOnThread(void *p)
+{
+	DWORD_PTR ptr;
+	LRESULT messageResult;
+
 	SystemParametersInfo(SPI_SETNONCLIENTMETRICS,
-		metrics.cbSize,
-		&metrics,
-		SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+		sizeof(NONCLIENTMETRICS),
+		s_fontMetrics,
+		SPIF_UPDATEINIFILE); // | SPIF_SENDCHANGE);
+
+	_endthreadex(0);
+	return 0;
+}
+
+/**
+ * 画面各部の幅を設定する。
+ *
+ * @param fontMetrics 幅指定用NONCLIENTMETRICS
+ */
+void ReMetrics::setMetrics(
+	NONCLIENTMETRICS *fontMetrics
+) {
+
+	DWORD_PTR ptr;
+	LRESULT messageResult;
+
+	// 幅設定
+	if (appMenu->isChecked(IDM_ANOTHER)) {
+		// UIと別スレッドでSystemParametersInfo(SPI_SETNONCLIENTMETRICSを
+		// 実行する。
+		s_fontMetrics = fontMetrics;
+
+		HANDLE handle;
+
+		handle = (HANDLE)_beginthreadex(NULL,0,setOnThread,NULL,0,NULL);
+
+		// 一応5秒ほど待つ
+		WaitForSingleObject( handle, 5000 );
+		CloseHandle(handle);
+	} else {
+		// UIと同じスレッドでSystemParametersInfo(SPI_SETNONCLIENTMETRICSを
+		// 実行する。
+		SystemParametersInfo(SPI_SETNONCLIENTMETRICS,
+			sizeof(NONCLIENTMETRICS),
+			fontMetrics,
+			SPIF_UPDATEINIFILE); // | SPIF_SENDCHANGE);
+	}
+
+	messageResult = SendMessageTimeout(
+		HWND_BROADCAST,
+		WM_SETTINGCHANGE,
+		SPI_SETNONCLIENTMETRICS,
+		(LPARAM)_T("WindowMetrics"),
+		SMTO_ABORTIFHUNG,
+		5000,
+		&ptr);
+	if (messageResult == 0) {
+		if (GetLastError() == ERROR_TIMEOUT) {
+			MessageBox(this->getHwnd(), 
+				_T("SendMessage timeout."),
+				_T("Information"),
+				MB_OK | MB_ICONEXCLAMATION);
+		}
+	}
 
 	// 色を再設定することで画面をリフレッシュする。
 	// のだが、IObit StartMenu 8が起動しているときはSetSysColorsを
@@ -679,8 +766,8 @@ bool ReMetrics::OnBnClickedOk()
 	SetSysColors(1,colorItems,colors);
 #endif
 
-	return true;
 }
+
 
 /**
  * ダイアログ操作が行われた時に呼び出されます。
@@ -818,3 +905,22 @@ INT_PTR ReMetrics::OnLostFocus(WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
+
+/**
+ * ドキュメントファイルを表示する。
+ *
+ */
+void ReMetrics::showHelp(void)
+{
+	// 実行ファイルの情報を得るためのバッファ群
+	TCHAR path[_MAX_PATH+1],drive[_MAX_DRIVE+1],dir[_MAX_DIR+1],helpFile[_MAX_PATH+1];
+
+	// 実行ファイルのあるところのBShelp.htmlのパス名を生成する。
+	::GetModuleFileName(NULL,path,_MAX_PATH);
+	::_tsplitpath(path,drive,dir,NULL,NULL);
+	::_stprintf(helpFile,_T("%s%s%s"),drive,dir,_T("ReMetrics.html"));
+	
+	// 関連付けられたアプリでドキュメントファイルを表示する。
+	ShellExecute(hWnd,_T("open"),helpFile,NULL,NULL,SW_SHOW);
+}
+

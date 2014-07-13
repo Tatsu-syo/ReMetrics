@@ -220,6 +220,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TWR\TwrMenu.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TWR\TwrUpDown.cpp"
 					>
 				</File>
@@ -279,6 +283,10 @@
 				</File>
 				<File
 					RelativePath=".\TWR\TwrCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TWR\TwrMenu.h"
 					>
 				</File>
 				<File

@@ -7,6 +7,7 @@ The sources for Re-Metrics are distributed under the MIT open source license
 
 #include "DialogAppliBase.h"
 #include "TwrUpDown.h"
+#include "TwrMenu.h"
 
 class ReMetrics : public DialogAppliBase {
 private:
@@ -33,6 +34,8 @@ private:
 	TwrUpDown *menuHeightUpDown;
 	TwrUpDown *paddingUpDown;
 
+	TwrMenu *appMenu;
+
 	int minTitleHeight;
 	int minPaletteHeight;
 	int minMenuHeight;
@@ -50,6 +53,8 @@ private:
 	void adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor);
 	int getMinHeight(LOGFONT *font);
 	void setItemRange();
+	void setMetrics(NONCLIENTMETRICS *fontMetrics);
+	void showHelp(void);
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);

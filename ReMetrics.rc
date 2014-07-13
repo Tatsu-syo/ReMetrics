@@ -151,8 +151,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,4,0
- PRODUCTVERSION 1,0,4,0
+ FILEVERSION 1,0,5,0
+ PRODUCTVERSION 1,0,5,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -169,12 +169,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "T.Syoji's Personal Development"
             VALUE "FileDescription", "Re-Metrics"
-            VALUE "FileVersion", "1, 0, 4, 0"
+            VALUE "FileVersion", "1, 0, 5, 0"
             VALUE "InternalName", "ReMetrics"
             VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012-2014"
             VALUE "OriginalFilename", "ReMetrics.exe"
             VALUE "ProductName", "Re-Metrics"
-            VALUE "ProductVersion", "1, 0, 4, 0"
+            VALUE "ProductVersion", "1, 0, 5, 0"
         END
     END
     BLOCK "VarFileInfo"
@@ -214,8 +214,14 @@ BEGIN
         MENUITEM "Windows 7",                   IDM_SET_7
         MENUITEM "Windows 8/8.1",               IDM_SET_8
     END
+    POPUP "ツール(&T)"
+    BEGIN
+        MENUITEM "別スレッドでフォントを変更する。(&A)",        IDM_ANOTHER
+    END
     POPUP "ヘルプ(&H)"
     BEGIN
+        MENUITEM "ヘルプの表示(&C)",                  IDM_HELPTOPIC
+        MENUITEM SEPARATOR
         MENUITEM "Windowsのバージョン(&W)",           IDM_WINVER
         MENUITEM "バージョン情報(&A)",                 IDM_ABOUT
     END
