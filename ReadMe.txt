@@ -1,22 +1,21 @@
 ﻿Re-Metrics source file package
-By Tatsuhiko Syoji(Tatsu) 2012-2014
+By Tatsuhiko Syoji(Tatsu) 2012-2015
 
 [必要となるプログラム]
-・Visual Studio 2008(VC++)
+・Visual Studio 2013(VC++)
 
 [ファイル]
 ReadMe.txt:本ファイルです。
 LICENSE.txt : MITライセンスの条文です。
-ReMetrics.sln : Visual Studio 2008用ソリューションファイルです。
-ReMetrics.vcproj : Visual Studio 2008用プロジェクトファイルです。
+ReMetrics.sln : Visual Studio 2013用ソリューションファイルです。
+ReMetrics.vcxproj : Visual Studio 2013用プロジェクトファイルです。
 TWRフォルダ配下のファイル : GUI構築に使用したファイルです。
 その他のファイル : Re-Metrics自身のソースファイルです。
 
 [使い方]
 1.まず、本アーカイブをディレクトリ付きで展開します。
 2.ReMetrics.slnを開きます。
-3.ビルドを行うと実行ファイルがデバッグ版はDebugフォルダに、リリース版は
-　Releaseフォルダに生成されます。
+3.ビルドを行うと実行ファイルが生成されます。
 
 [ライセンス]
 MITライセンス(http://opensource.org/licenses/mit-license.php)に従います。

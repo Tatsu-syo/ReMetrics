@@ -43,18 +43,22 @@ private:
 	NONCLIENTMETRICS metrics;
 	LOGFONT iconFont;
 
-	NONCLIENTMETRICS metricsAll;
-	LOGFONT iconFontAll;
-
 	bool OnBnClickedOk();
 	void OnBnClickedWinVer();
 	INT_PTR OnSettingChange(WPARAM wParam, LPARAM lParam);
+	void OnLoad();
+	void OnSave();
 
+	void applyWindowSetting(NONCLIENTMETRICS &newMetrics);
 	void adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor);
 	int getMinHeight(LOGFONT *font);
 	void setItemRange();
 	void setMetrics(NONCLIENTMETRICS *fontMetrics);
 	void showHelp(void);
+	void GetNonclientMetrics(NONCLIENTMETRICS *target);
+	BOOL startLoadWindowItem(TCHAR *filename);
+	BOOL startSaveWindowItem(TCHAR *filename);
+	bool isNumStr(TCHAR *buf);
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);

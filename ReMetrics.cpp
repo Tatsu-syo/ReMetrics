@@ -13,6 +13,7 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include <process.h>
 #include <shellapi.h>
 #include "ReMetrics.h"
+#include "NCFileDialog.h"
 
 #define MAX_LOADSTRING 100
 
@@ -104,56 +105,9 @@ int ReMetrics::OnWindowShow()
 	dwver = GetVersion();
 	winVerMajor = LOBYTE(dwver);
 
-	FillMemory(&metrics,sizeof(NONCLIENTMETRICS),0x00);
+	GetNonclientMetrics(&metrics);
 
-	// アイコン以外のフォント情報を取得する。
-	if (winVerMajor > 5) {
-		/* Windows Vista/7/8 */
-		metrics.cbSize = sizeof(NONCLIENTMETRICS);
-	} else {
-		/* Windows 2000/XP */
-		metrics.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
-	}
-
-	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
-		metrics.cbSize,
-		&metrics,
-		0);
-
-	TCHAR buf[32];
-
-	_stprintf(buf,_T("%d"), metrics.iBorderWidth);
-	borderWidth = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iCaptionWidth);
-	titleWidth = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iCaptionHeight);
-	titleHeight = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iScrollWidth);
-	scrollWidth = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iScrollHeight);
-	scrollHeight = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iSmCaptionWidth);
-	paletteWidth = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iSmCaptionHeight);
-	paletteHeight = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iMenuWidth);
-	menuWidth = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iMenuHeight);
-	menuHeight = buf;
-
-	_stprintf(buf,_T("%d"), metrics.iPaddedBorderWidth);
-	padding = buf;
-
-	UpdateData(false);
-
+	// スピンボタンとテキストボックスを対応づける。
 	borderWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_BORDER));
 	borderWidthUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_BORDER));
 	titleWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_TITLE_WIDTH));
@@ -178,22 +132,73 @@ int ReMetrics::OnWindowShow()
 	// 各スピンボタンの範囲を設定する。
 	setItemRange();
 
-	borderWidthUpDown->setPos(metrics.iBorderWidth);
-	titleWidthUpDown->setPos(metrics.iCaptionWidth);
-	titleHeightUpDown->setPos(metrics.iCaptionHeight);
-	scrollWidthUpDown->setPos(metrics.iScrollWidth);
-	scrollHeightUpDown->setPos(metrics.iScrollHeight);
-	paletteWidthUpDown->setPos(metrics.iSmCaptionWidth);
-	paletteHeightUpDown->setPos(metrics.iSmCaptionHeight);
-	menuWidthUpDown->setPos(metrics.iMenuWidth);
-	menuHeightUpDown->setPos(metrics.iMenuHeight);
-	paddingUpDown->setPos(metrics.iPaddedBorderWidth);
+	// NONCLIENTMETRICSの設定を画面に反映する。
+	applyWindowSetting(metrics);
 
 	adjustWindowSize(&metrics, winVerMajor);
 
 	return 0;
 }
 
+/**
+ * ウインドウ設定を画面に反映する。
+ *
+ * @param newMetrics ウインドウ設定
+ */
+void ReMetrics::applyWindowSetting(NONCLIENTMETRICS &newMetrics)
+{
+	TCHAR buf[32];
+
+	// 画面に各項目のサイズを反映する。
+	_stprintf(buf, _T("%d"), newMetrics.iBorderWidth);
+	borderWidth = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iCaptionWidth);
+	titleWidth = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iCaptionHeight);
+	titleHeight = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iScrollWidth);
+	scrollWidth = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iScrollHeight);
+	scrollHeight = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iSmCaptionWidth);
+	paletteWidth = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iSmCaptionHeight);
+	paletteHeight = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iMenuWidth);
+	menuWidth = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iMenuHeight);
+	menuHeight = buf;
+
+	_stprintf(buf, _T("%d"), newMetrics.iPaddedBorderWidth);
+	padding = buf;
+
+	// スピンボタンの位置を設定する。
+	borderWidthUpDown->setPos(newMetrics.iBorderWidth);
+	titleWidthUpDown->setPos(newMetrics.iCaptionWidth);
+	titleHeightUpDown->setPos(newMetrics.iCaptionHeight);
+	scrollWidthUpDown->setPos(newMetrics.iScrollWidth);
+	scrollHeightUpDown->setPos(newMetrics.iScrollHeight);
+	paletteWidthUpDown->setPos(newMetrics.iSmCaptionWidth);
+	paletteHeightUpDown->setPos(newMetrics.iSmCaptionHeight);
+	menuWidthUpDown->setPos(newMetrics.iMenuWidth);
+	menuHeightUpDown->setPos(newMetrics.iMenuHeight);
+	paddingUpDown->setPos(newMetrics.iPaddedBorderWidth);
+
+	UpdateData(false);
+
+}
+
+/**
+ * スピンボタンの動作範囲を設定する。
+ */
 void ReMetrics::setItemRange()
 {
 	borderWidthUpDown->setRange(1, 256);
@@ -421,6 +426,12 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("4");
 			UpdateData(false);
 			return (INT_PTR)0;
+		case IDM_OPEN:
+			OnLoad();
+			return (INT_PTR)0;
+		case IDM_SAVE:
+			OnSave();
+			return (INT_PTR)0;
 		case IDOK:
 		case IDM_SET:
 			if (!OnBnClickedOk()) {
@@ -445,7 +456,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.05\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2014"),
+				_T("Re-Metrics Version 1.06\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -584,6 +595,333 @@ void ReMetrics::OnBnClickedWinVer()
 }
 
 /**
+* ウインドウ設定を保存するを選択した時の動作
+*/
+void ReMetrics::OnLoad()
+{
+	NCFileDialog *dlg = new NCFileDialog(
+		TRUE,
+		NULL,
+		NULL,
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		_T("設定ファイル(*.ini)\0*.ini\0すべてのファイル(*.*)\0*.*\0\0"),
+		this->getHwnd(),
+		0);
+
+	int result = dlg->DoModal();
+	if (result != IDOK) {
+		delete dlg;
+		return;
+	}
+
+	BOOL loadResult;
+	loadResult = startLoadWindowItem(dlg->GetPathName());
+	if (!loadResult) {
+		MessageBox(
+			this->getHwnd(),
+			_T("ウインドウ設定の読み込みに失敗しました。"),
+			_T("エラー"),
+			MB_OK | MB_ICONEXCLAMATION);
+	}
+
+	delete dlg;
+}
+
+/**
+* フォント情報読み込みを開始する。
+*
+* @param filename iniファイル名
+* @result TRUE:保存成功 FALSE:保存失敗
+*/
+BOOL ReMetrics::startLoadWindowItem(TCHAR *filename)
+{
+	BOOL loadResult;
+	NONCLIENTMETRICS newMetrics;
+
+	TCHAR buf[32];
+	DWORD result;
+
+	GetNonclientMetrics(&newMetrics);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("BorderWidth"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iBorderWidth = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("CaptionWidth"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iCaptionWidth = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("CaptionHeight"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iCaptionHeight = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("ScrollWidth"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iScrollWidth = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("ScrollHeight"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iScrollHeight = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("SmCaptionWidth"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iSmCaptionWidth = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("SmCaptionHeight"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iSmCaptionHeight = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("MenuWidth"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iMenuWidth = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("MenuHeight"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iMenuHeight = _tstoi(buf);
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T("PaddedBorderWidth"),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if ((!result) || (!isNumStr(buf))) {
+		return FALSE;
+	}
+	newMetrics.iPaddedBorderWidth = _tstoi(buf);
+
+	metrics = newMetrics;
+
+	// NONCLIENTMETRICSの設定を画面に反映する。
+	applyWindowSetting(metrics);
+
+	return TRUE;
+}
+
+bool ReMetrics::isNumStr(TCHAR *buf)
+{
+	TCHAR *p = buf;
+
+	while (*p) {
+		if (!_istdigit(*p)) {
+			return false;
+		}
+		p++;
+	}
+	return true;
+}
+
+/**
+* ウインドウ設定を保存するを選択した時の動作
+*/
+void ReMetrics::OnSave()
+{
+	NCFileDialog *dlg = new NCFileDialog(
+		FALSE,
+		NULL,
+		NULL,
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		_T("設定ファイル(*.ini)\0*.ini\0すべてのファイル(*.*)\0*.*\0\0"),
+		this->getHwnd(),
+		0);
+
+	int result = dlg->DoModal();
+	if (result != IDOK) {
+		delete dlg;
+		return;
+	}
+
+	BOOL saveResult;
+	saveResult = startSaveWindowItem(dlg->GetPathName());
+	if (!saveResult) {
+		MessageBox(
+			this->getHwnd(),
+			_T("ウインドウ設定の保存に失敗しました。"),
+			_T("エラー"),
+			MB_OK | MB_ICONEXCLAMATION);
+	}
+
+	delete dlg;
+}
+
+/**
+* ウインドウ情報保存を開始する。
+*
+* @param filename iniファイル名
+* @result TRUE:保存成功 FALSE:保存失敗
+*/
+BOOL ReMetrics::startSaveWindowItem(TCHAR *filename)
+{
+	BOOL result;
+	TCHAR buf[32];
+
+	_stprintf(buf, _T("%d"), metrics.iBorderWidth);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("BorderWidth"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iCaptionWidth);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("CaptionWidth"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iCaptionHeight);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("CaptionHeight"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iScrollWidth);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("ScrollWidth"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iScrollHeight);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("ScrollHeight"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iSmCaptionWidth);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("SmCaptionWidth"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iSmCaptionHeight);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("SmCaptionHeight"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iMenuWidth);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("MenuWidth"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iMenuHeight);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("MenuHeight"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), metrics.iPaddedBorderWidth);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T("PaddedBorderWidth"),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/**
  * OKボタン押下時の処理。<br>
  * 入力内容の検査を行った後、画面各部の幅・高さの設定を行う。
  *
@@ -644,25 +982,7 @@ bool ReMetrics::OnBnClickedOk()
 		return false;
 	}
 
-	DWORD dwver;
-
-	dwver = GetVersion();
-
-	FillMemory(&metrics,sizeof(NONCLIENTMETRICS),0x00);
-
-	// アイコン以外のフォント情報を取得する。
-	if (LOBYTE(dwver) > 5) {
-		/* Windows Vista/7/8 */
-		metrics.cbSize = sizeof(NONCLIENTMETRICS);
-	} else {
-		/* Windows 2000/XP */
-		metrics.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
-	}
-
-	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
-		metrics.cbSize,
-		&metrics,
-		0);
+	GetNonclientMetrics(&metrics);
 
 	metrics.iBorderWidth = _tstoi(borderWidth.c_str());
 	metrics.iCaptionWidth = _tstoi(titleWidth.c_str());
@@ -680,6 +1000,35 @@ bool ReMetrics::OnBnClickedOk()
 	return true;
 }
 
+/**
+ * NONCLIENTMETRICS構造体を取得する。
+ *
+ * @param target NONCLIENTMETRICS構造体へのポインタ
+ */
+void ReMetrics::GetNonclientMetrics(NONCLIENTMETRICS *target)
+{
+	DWORD dwver;
+
+	dwver = GetVersion();
+
+	FillMemory(target, sizeof(NONCLIENTMETRICS), 0x00);
+
+	// アイコン以外のフォント情報を取得する。
+	if (LOBYTE(dwver) > 5) {
+		/* Windows Vista/7/8 */
+		target->cbSize = sizeof(NONCLIENTMETRICS);
+	}
+	else {
+		/* Windows 2000/XP */
+		target->cbSize = sizeof(NONCLIENTMETRICS) - sizeof(int);
+	}
+
+	SystemParametersInfo(SPI_GETNONCLIENTMETRICS,
+		target->cbSize,
+		target,
+		0);
+}
+
 NONCLIENTMETRICS *s_fontMetrics;
 
 /**
@@ -689,8 +1038,6 @@ NONCLIENTMETRICS *s_fontMetrics;
  */
 unsigned _stdcall setOnThread(void *p)
 {
-	DWORD_PTR ptr;
-	LRESULT messageResult;
 
 	SystemParametersInfo(SPI_SETNONCLIENTMETRICS,
 		sizeof(NONCLIENTMETRICS),
