@@ -456,7 +456,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.06\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
+				_T("Re-Metrics Version 1.06a\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
 				_T("Re-Metrics‚É‚Â‚¢‚Ä"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -573,6 +573,17 @@ void ReMetrics::OnBnClickedWinVer()
 							major,minor);
 					}
 					break;
+			}
+			break;
+		case 10:
+			if (infoEx.wProductType == VER_NT_WORKSTATION) {
+				_stprintf(buf,
+					_T("Windows 10 (%d.%d)"),
+					major, minor);
+			} else {
+				_stprintf(buf,
+					_T("Windows Server 2016 (%d.%d)"),
+					major, minor);
 			}
 			break;
 		default:

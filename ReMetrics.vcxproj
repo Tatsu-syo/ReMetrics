@@ -215,7 +215,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="ReMetrics.exe.manifest" />
+    <Manifest Include="ReMetrics.exe.manifest">
+      <SubType>Designer</SubType>
+    </Manifest>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
