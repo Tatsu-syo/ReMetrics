@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\TWR">
+      <UniqueIdentifier>{90f3b3ee-1753-4ebb-9906-def71793c448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\TWR">
+      <UniqueIdentifier>{622eb756-5ec6-4e52-9361-85649a2fb045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ReMetrics.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\BaseDialog.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\DialogAppliBase.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\ModelessDialog.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\TwrCore.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\TwrMenu.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\TwrUpDown.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\TwrWnd.cpp">
+      <Filter>ソース ファイル\TWR</Filter>
+    </ClCompile>
+    <ClCompile Include="TWR\NCFileDialog.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ReMetrics.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\AppliBase.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\BaseDialog.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\DialogAppliBase.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\ModelessDialog.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\stdafx.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\tstring.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\TwrCore.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\TwrMenu.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\TwrUpDown.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\TwrWnd.h">
+      <Filter>ヘッダー ファイル\TWR</Filter>
+    </ClInclude>
+    <ClInclude Include="TWR\NCFileDialog.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ReMetrics.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ReMetrics.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="ReMetrics.exe.manifest" />
+  </ItemGroup>
+</Project>
