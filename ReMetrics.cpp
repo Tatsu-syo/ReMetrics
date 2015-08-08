@@ -297,6 +297,8 @@ INT_PTR ReMetrics::OnInitDialog()
     SendMessage(this->hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 
 	appMenu = new TwrMenu(hWnd);
+	// 初期設定では別スレッドで画面の各項目の幅・高さを設定するようにする。
+	appMenu->CheckMenuItem(IDM_ANOTHER, true);
 
 	UpdateData(false);
 
@@ -426,6 +428,19 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("4");
 			UpdateData(false);
 			return (INT_PTR)0;
+		case IDM_SET_10:
+			borderWidth = _T("1");
+			titleWidth = _T("36");
+			titleHeight = _T("22");
+			scrollWidth = _T("17");
+			scrollHeight = _T("17");
+			paletteWidth = _T("22");
+			paletteHeight = _T("22");
+			menuWidth = _T("19");
+			menuHeight = _T("19");
+			padding = _T("1");
+			UpdateData(false);
+			return (INT_PTR)0;
 		case IDM_OPEN:
 			OnLoad();
 			return (INT_PTR)0;
@@ -456,7 +471,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.06a\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
+				_T("Re-Metrics Version 1.07 Beta 1\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -639,11 +654,11 @@ void ReMetrics::OnLoad()
 }
 
 /**
-* フォント情報読み込みを開始する。
-*
-* @param filename iniファイル名
-* @result TRUE:保存成功 FALSE:保存失敗
-*/
+ * ウインドウ各部の幅・高さ情報読み込みを開始する。
+ *
+ * @param filename iniファイル名
+ * @result TRUE:保存成功 FALSE:保存失敗
+ */
 BOOL ReMetrics::startLoadWindowItem(TCHAR *filename)
 {
 	BOOL loadResult;
@@ -782,6 +797,12 @@ BOOL ReMetrics::startLoadWindowItem(TCHAR *filename)
 	return TRUE;
 }
 
+/**
+ * 文字列がすべて数字で構成されているかどうか判定する。
+ *
+ * @param buf 判定する文字列
+ * @return true:すべて数字 false:数字以外の文字が存在する。
+ */
 bool ReMetrics::isNumStr(TCHAR *buf)
 {
 	TCHAR *p = buf;
@@ -1077,13 +1098,20 @@ void ReMetrics::setMetrics(
 		// 実行する。
 		s_fontMetrics = fontMetrics;
 
-		HANDLE handle;
+		uintptr_t startResult = _beginthreadex(NULL, 0, setOnThread, NULL, 0, NULL);
+		if (startResult != 0) {
+			// 正常にスレッドを開始したらスレッド終了を待機する。
+			HANDLE handle;
+			handle = (HANDLE)startResult;
 
-		handle = (HANDLE)_beginthreadex(NULL,0,setOnThread,NULL,0,NULL);
-
-		// 一応5秒ほど待つ
-		WaitForSingleObject( handle, 5000 );
-		CloseHandle(handle);
+			// 一応5秒ほど待つ
+			DWORD waitResult = WaitForSingleObject(handle, 5000);
+			if (waitResult == WAIT_TIMEOUT) {
+				// スレッドが終了しない場合はどうしようもないのでスレッドを終了する。
+				TerminateThread(handle, 0);
+			}
+			CloseHandle(handle);
+		}
 	} else {
 		// UIと同じスレッドでSystemParametersInfo(SPI_SETNONCLIENTMETRICSを
 		// 実行する。
