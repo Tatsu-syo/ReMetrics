@@ -149,8 +149,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,7,0
- PRODUCTVERSION 1,0,7,0
+ FILEVERSION 1,0,7,1
+ PRODUCTVERSION 1,0,7,1
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -167,12 +167,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "T.Syoji's Personal Development"
             VALUE "FileDescription", "Re-Metrics"
-            VALUE "FileVersion", "1.0.7.0"
+            VALUE "FileVersion", "1.0.7.1"
             VALUE "InternalName", "ReMetrics"
             VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012-2015"
             VALUE "OriginalFilename", "ReMetrics.exe"
             VALUE "ProductName", "Re-Metrics"
-            VALUE "ProductVersion", "1.0.7.0"
+            VALUE "ProductVersion", "1.0.7.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -201,7 +201,7 @@ BEGIN
         MENUITEM "ウインドウ設定を読み込む(&O)...",         IDM_OPEN
         MENUITEM "ウインドウ設定を保存する(&A)...",         IDM_SAVE
         MENUITEM SEPARATOR
-        MENUITEM "各項目を設定して終了(&S)",              IDM_SET
+        MENUITEM "各項目を設定して終了(&S)",              IDOK
         MENUITEM "終了(&X)",                      IDM_EXIT
     END
     POPUP "プリセット(&P)"

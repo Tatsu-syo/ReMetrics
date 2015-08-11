@@ -16,6 +16,8 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include "NCFileDialog.h"
 
 #define MAX_LOADSTRING 100
+/** ダイアログテンプレートのダイアログの高さ */
+const int Height_TemplateUnit = 185;
 
 //
 // ダイアログベースアプリケーションフレームワークと
@@ -471,7 +473,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.07 Beta 1\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
+				_T("Re-Metrics Version 1.07 Beta 2\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2015"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -1204,11 +1206,12 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 	int menuHeight;
 	int newHeight;
 	int requiredClientHeight;
+	LONG baseUnits;
 
-	GetClientRect(hWnd, &clientRect);
+	// ウインドウの四隅の位置を取得する。
 	GetWindowRect(hWnd, &windowRect);
 
-	// ウインドウ自身の位置と幅
+	// 四隅の位置からウインドウ自身の位置と幅を算出する。
 	x = windowRect.left;
 	y = windowRect.top;
 	width = windowRect.right - windowRect.left + 1;
@@ -1220,6 +1223,9 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 		borderWidth += (metrics->iPaddedBorderWidth * 2);
 	}
 
+	// クライアントの四隅を取得する。
+	GetClientRect(hWnd, &clientRect);
+
 	// クライアント領域の幅
 	clientWidth = clientRect.right - clientRect.left + 1;
 	clientHeight = clientRect.bottom - clientRect.top + 1;
@@ -1230,6 +1236,14 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 
 	// 欲しいクライアント領域の高さ
 	requiredClientHeight = 300;
+	RECT rect;
+	BOOL result;
+
+	rect.left = 4;
+	rect.top = 8;
+	if (result = MapDialogRect(hWnd, &rect)) {
+		requiredClientHeight = MulDiv(Height_TemplateUnit, rect.top, 8);
+	}
 
 	// 補正後の高さ
 	newHeight = 
