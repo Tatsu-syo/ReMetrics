@@ -7,6 +7,8 @@ By Tatsuhiko Syoji(Tatsu) 2012-2016
 [ファイル]
 ReadMe.txt:本ファイルです。
 LICENSE.txt : MITライセンスの条文です。
+ReMetrics_2008.sln : Visual Studio 2008用ソリューションファイルです。
+ReMetrics_2008.vcproj : Visual Studio 2008用プロジェクトファイルです。
 ReMetrics.sln : Visual Studio 2015用ソリューションファイルです。
 ReMetrics.vcxproj : Visual Studio 2015用プロジェクトファイルです。
 TWRフォルダ配下のファイル : GUI構築に使用したファイルです。
