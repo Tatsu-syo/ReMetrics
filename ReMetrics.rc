@@ -1,3 +1,7 @@
+//
+// Re-Metrics (C) 2012-2016 Tatsuhiko Shoji
+// The sources for Re-Metrics are distributed under the MIT open source license
+//
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
@@ -32,7 +36,9 @@ LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDC_MYICON              ICON                    "ReMetrics.ico"
+
 IDI_SMALL               ICON                    "ReMetrics.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -149,8 +155,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,7,2
- PRODUCTVERSION 1,0,7,2
+ FILEVERSION 1,1,0,0
+ PRODUCTVERSION 1,1,0,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -167,12 +173,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "T.Syoji's Personal Development"
             VALUE "FileDescription", "Re-Metrics"
-            VALUE "FileVersion", "1.0.7.2"
+            VALUE "FileVersion", "1.1.0.0"
             VALUE "InternalName", "ReMetrics"
-            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012-2015"
+            VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012-2016"
             VALUE "OriginalFilename", "ReMetrics.exe"
             VALUE "ProductName", "Re-Metrics"
-            VALUE "ProductVersion", "1.0.7.2"
+            VALUE "ProductVersion", "1.1.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -188,6 +194,7 @@ END
 //
 
 IDR_RT_MANIFEST         RT_MANIFEST             "ReMetrics.exe.manifest"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
