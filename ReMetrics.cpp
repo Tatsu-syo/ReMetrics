@@ -87,6 +87,12 @@ int ReMetrics::OnAppliStart(TCHAR *lpCmdLine)
 {
 	// この関数をオーバーライドしてアプリ固有の初期化を行います。
 	appMenu = NULL;
+	setOnStart = false;
+	_tcscpy(settingFile, _T(""));
+
+	// オプションを取得する。
+	getOption(lpCmdLine);
+
 	return 0;
 }
 
@@ -390,6 +396,23 @@ INT_PTR ReMetrics::OnInitDialog()
 	appMenu = new TwrMenu(hWnd);
 	// 初期設定では別スレッドで画面の各項目の幅・高さを設定するようにする。
 	appMenu->CheckMenuItem(IDM_ANOTHER, true);
+
+	if (settingFile[0] != _T('\0')) {
+		BOOL loadResult;
+		loadResult = startLoadWindowItem(settingFile);
+		if (!loadResult) {
+			// NONCLIENTMETRICSの設定を画面に反映する。
+			GetNonclientMetrics(&metrics);
+			applyWindowSetting(metrics);
+		} else {
+			if (setOnStart) {
+				setMetrics(&metrics);
+				EndDialog(hWnd, 0);
+
+				return (INT_PTR)FALSE;
+			}
+		}
+	}
 
 	UpdateData(false);
 
