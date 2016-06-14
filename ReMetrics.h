@@ -41,7 +41,9 @@ private:
 	int minMenuHeight;
 
 	NONCLIENTMETRICS metrics;
-	LOGFONT iconFont;
+
+	TCHAR settingFile[MAX_PATH];
+	bool setOnStart;
 
 	bool OnBnClickedOk();
 	void OnBnClickedWinVer();
@@ -59,6 +61,8 @@ private:
 	BOOL startLoadWindowItem(TCHAR *filename);
 	BOOL startSaveWindowItem(TCHAR *filename);
 	bool isNumStr(TCHAR *buf);
+	void getOption(TCHAR *lpCmdLine);
+	void parseOption(TCHAR *param, int argCount);
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);

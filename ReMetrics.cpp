@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2014 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2016 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 // ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。
@@ -140,6 +140,95 @@ int ReMetrics::OnWindowShow()
 	adjustWindowSize(&metrics, winVerMajor);
 
 	return 0;
+}
+
+/**
+* コマンドラインオプションを取得する。
+*
+* @param lpCmdLine コマンドライン
+*/
+void ReMetrics::getOption(TCHAR *lpCmdLine)
+{
+	TCHAR *p;
+	TCHAR *paramStart;
+	bool firstCommand = false;
+	bool capturing = false;
+	TCHAR delimiter;
+	int argCount = 0;
+
+	p = lpCmdLine;
+	while (*p != _T('\0')) {
+		if (*p == _T('\"')) {
+			if (!capturing) {
+				capturing = true;
+				delimiter = _T('\"');
+				// 次の文字からパラメータ開始
+				paramStart = p + 1;
+			} else {
+				if (delimiter == _T('\"')) {
+					// 解析中で区切り文字がダブルクォーテーションの場合
+					// パラメータ終了とする。
+					capturing = false;
+					*p = _T('\0');
+					argCount++;
+					// ここでパラメータの個数に応じた処理を行う。
+					parseOption(paramStart, argCount);
+				}
+			}
+		} else if (_istspace(*p)) {
+			// 空白の場合
+			if (capturing) {
+				if (delimiter != _T('\"')) {
+					// 解析中で区切り文字がダブルクォーテーションでない場合
+					// パラメータ終了とする。
+					capturing = false;
+					*p = _T('\0');
+					argCount++;
+					// ここでパラメータの個数に応じた処理を行う。
+					parseOption(paramStart, argCount);
+				}
+			}
+		} else {
+			if (!capturing) {
+				// パラメータ開始
+				capturing = true;
+				paramStart = p;
+				delimiter = _T(' ');
+			}
+		}
+		p++;
+	}
+	if (capturing) {
+		// まだコマンドライン解析が続いていたらここまでをコマンドラインとする。
+		argCount++;
+		// ここでパラメータの個数に応じた処理を行う。
+		parseOption(paramStart, argCount);
+	}
+
+}
+
+/**
+ * オプションの位置に応じた解析を行う。
+ *
+ * @param param パラメータ
+ * @param argCount オプションの個数
+ */
+void ReMetrics::parseOption(TCHAR *param, int argCount)
+{
+	switch (argCount) {
+		case 1:
+			// 設定ファイル名
+			if (_tcscmp(_T("--"), param)) {
+				_tcscpy(settingFile, param);
+			}
+			break;
+		default:
+			if (!_tcscmp(param, _T("-set"))) {
+				setOnStart = true;
+			}
+
+			break;
+	}
 }
 
 /**
