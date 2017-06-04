@@ -63,6 +63,7 @@ private:
 	bool isNumStr(TCHAR *buf);
 	void getOption(TCHAR *lpCmdLine);
 	void parseOption(TCHAR *param, int argCount);
+	void getWin10Ver(TCHAR *buf, DWORD major, DWORD minor);
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);

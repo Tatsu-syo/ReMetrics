@@ -706,9 +706,7 @@ void ReMetrics::OnBnClickedWinVer()
 			break;
 		case 10:
 			if (infoEx.wProductType == VER_NT_WORKSTATION) {
-				_stprintf(buf,
-					_T("Windows 10 (%d.%d)"),
-					major, minor);
+				getWin10Ver(buf, major, minor);
 			} else {
 				_stprintf(buf,
 					_T("Windows Server 2016 (%d.%d)"),
@@ -733,6 +731,47 @@ void ReMetrics::OnBnClickedWinVer()
 		_T("Windowsのバージョン"),
 		MB_OK | MB_ICONINFORMATION);
 }
+
+/**
+ * Windows 10のバージョンを取得する。
+ *
+ * @param buf バージョン番号格納先
+ * @param major メジャーバージョン
+ * @param minor マイナーバージョン
+ */
+void ReMetrics::getWin10Ver(TCHAR *buf, DWORD major, DWORD minor)
+{
+	TCHAR release[8];
+	TCHAR build[8];
+	DWORD ubr = 0;
+
+	HKEY key;
+	LONG result;
+	DWORD size;
+
+	_tcscpy(release, _T("????"));
+	_tcscpy(build, _T("?"));
+
+	result = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"),
+		0, KEY_READ, &key);
+	if (result == ERROR_SUCCESS) {
+		size = sizeof(TCHAR) * 8;
+		RegQueryValueEx(key, _T("ReleaseId"), NULL, NULL, (LPBYTE)release, (LPDWORD)&size);
+		size = sizeof(TCHAR) * 8;
+		RegQueryValueEx(key, _T("CurrentBuild"), NULL, NULL, (LPBYTE)build, (LPDWORD)&size);
+		size = sizeof(DWORD);
+		RegQueryValueEx(key, _T("UBR"), NULL, NULL, (LPBYTE)&ubr, (LPDWORD)&size);
+		RegCloseKey(key);
+	}
+
+	_stprintf(buf,
+		_T("Windows 10 (%d.%d) Version %s Build %s.%d"),
+		major, minor, release, build, ubr);
+
+}
+
+
 
 /**
 * ウインドウ設定を保存するを選択した時の動作
