@@ -26,6 +26,8 @@ const int Height_TemplateUnit = 185;
 
 // アプリケーションオブジェクト
 ReMetrics *appObj;
+RECT myMonitorLect;
+bool firstMonitor = false;
 
 /**
  * アプリケーションオブジェクトを作成します。
@@ -415,6 +417,11 @@ INT_PTR ReMetrics::OnInitDialog()
 	}
 
 	UpdateData(false);
+
+	EnumDisplayMonitors(NULL, NULL, MonitorNearMouseCallback, 0);
+
+	adjustCenter(myMonitorLect, HWND_TOP, this->hWnd);
+
 
 	return (INT_PTR)FALSE;
 }
@@ -1475,3 +1482,87 @@ void ReMetrics::showHelp(void)
 	ShellExecute(hWnd,_T("open"),helpFile,NULL,NULL,SW_SHOW);
 }
 
+/**
+ * カーソルのいるモニターを判定するためのEnumDisplayMonitorsのコールバック
+ *
+ * @param hMonitor モニターのハンドル
+ * @param hdcMonitor モニターのディスプレイコンテキスト
+ * @param lprcMonitor モニターの座標情報
+ * @param dwData EnumDisplayMonitors
+ * @return TRUE:列挙を続ける FALSE:列挙をやめ、モニターの座標情報を確定させる
+ */
+BOOL CALLBACK MonitorNearMouseCallback(
+	HMONITOR hMonitor,
+	HDC hdcMonitor,
+	LPRECT lprcMonitor,
+	LPARAM dwData
+)
+{
+	if (!firstMonitor) {
+		// ディスプレイの情報が何もない状態は避ける。
+		myMonitorLect = *lprcMonitor;
+		firstMonitor = true;
+	}
+
+	CURSORINFO cursofInfo;
+	cursofInfo.cbSize = sizeof(CURSORINFO);
+	BOOL result = GetCursorInfo(&cursofInfo);
+	if (result == 0) {
+		// カーソルの情報を利用できないときはプライマリモニタを
+		// カーソルのいるモニタ扱いとする。
+		if ((myMonitorLect.left == 0) && (myMonitorLect.top == 0)) {
+			myMonitorLect = *lprcMonitor;
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+	// カーソルのいるモニタかどうか判定する。
+	int x = cursofInfo.ptScreenPos.x;
+	int y = cursofInfo.ptScreenPos.y;
+	if ((x >= lprcMonitor->left) && (x <= lprcMonitor->right)) {
+		if ((y >= lprcMonitor->top) && (y <= lprcMonitor->bottom)) {
+			myMonitorLect = *lprcMonitor;
+
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
+/**
+ * ウインドウを親ウインドウの中央に配置する。
+ *
+ * @param parentRect 中心に入れる対象の領域
+ * @param parentHWnd 親ウインドウハンドル
+ * @param myHWnd 中央寄せする要素のウインドウハンドル
+ */
+void adjustCenter(RECT parentRect, HWND parentHWnd, HWND myHWnd)
+{
+	int parentWidth, parentHeight;
+	int myWidth, myHeight;
+	int newTop, newLeft;
+	RECT myRect;
+
+	GetWindowRect(myHWnd, &myRect);
+
+	parentWidth = parentRect.right - parentRect.left + 1;
+	parentHeight = parentRect.bottom - parentRect.top + 1;
+
+	myWidth = myRect.right - myRect.left + 1;
+	myHeight = myRect.bottom - myRect.top + 1;
+
+	if (myWidth >= parentWidth) {
+		newLeft = parentRect.left + 1;
+	} else {
+		newLeft = parentRect.left + MulDiv((parentWidth - myWidth), 45, 100);
+	}
+	if (myHeight >= parentHeight) {
+		newTop = parentRect.top + 1;
+	} else {
+		newTop = parentRect.top + MulDiv((parentHeight - myHeight), 45, 100);
+	}
+	SetWindowPos(myHWnd, parentHWnd, newLeft, newTop, myWidth, myHeight, SWP_SHOWWINDOW);
+
+}

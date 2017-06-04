@@ -84,6 +84,12 @@ public:
 #include	<sddl.h>
 #include	<tchar.h>
 
-TCHAR *getSID(void);
+BOOL CALLBACK MonitorNearMouseCallback(
+	HMONITOR hMonitor,
+	HDC hdcMonitor,
+	LPRECT lprcMonitor,
+	LPARAM dwData
+);
+void adjustCenter(RECT parentRect, HWND parentHWnd, HWND myHWnd);
 
 #endif
