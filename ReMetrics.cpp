@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2016 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 // ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。

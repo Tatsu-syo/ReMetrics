@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012,2013 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 #ifndef MYAPPLI_H

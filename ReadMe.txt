@@ -1,5 +1,5 @@
 ﻿Re-Metrics source file package
-By Tatsuhiko Syoji(Tatsu) 2012-2016
+By Tatsuhiko Syoji(Tatsu) 2012-2017
 
 [必要となるプログラム]
 ・Visual Studio 2008/2015(VC++)

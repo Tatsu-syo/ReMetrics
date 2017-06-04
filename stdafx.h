@@ -1,3 +1,7 @@
+/*
+Re-Metrics (C) 2012-2017 Tatsuhiko Shoji
+The sources for Re-Metrics are distributed under the MIT open source license
+*/
 // stdafx.h : 標準のシステム インクルード ファイルのインクルード ファイル、または
 // 参照回数が多く、かつあまり変更されない、プロジェクト専用のインクルード ファイル
 // を記述します。
