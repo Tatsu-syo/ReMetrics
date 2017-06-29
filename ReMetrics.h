@@ -22,6 +22,8 @@ private:
 	tstring menuWidth;
 	tstring menuHeight;
 	tstring padding;
+	tstring iconHMergin;
+	tstring iconVMergin;
 
 	TwrUpDown *borderWidthUpDown;
 	TwrUpDown *titleWidthUpDown;
@@ -33,6 +35,8 @@ private:
 	TwrUpDown *menuWidthUpDown;
 	TwrUpDown *menuHeightUpDown;
 	TwrUpDown *paddingUpDown;
+	TwrUpDown *iconHMerginUpDown;
+	TwrUpDown *iconVMerginUpDown;
 
 	TwrMenu *appMenu;
 
@@ -41,6 +45,7 @@ private:
 	int minMenuHeight;
 
 	NONCLIENTMETRICS metrics;
+	ICONMETRICS iconMetrics;
 
 	TCHAR settingFile[MAX_PATH];
 	bool setOnStart;
@@ -51,19 +56,24 @@ private:
 	void OnLoad();
 	void OnSave();
 
-	void applyWindowSetting(NONCLIENTMETRICS &newMetrics);
+	void applyWindowSetting(
+		NONCLIENTMETRICS &newMetrics,
+		ICONMETRICS &newIconMetrics);
 	void adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor);
 	int getMinHeight(LOGFONT *font);
 	void setItemRange();
-	void setMetrics(NONCLIENTMETRICS *fontMetrics);
+	void setMetrics(NONCLIENTMETRICS *fontMetrics, ICONMETRICS *newIconMetrics);
 	void showHelp(void);
 	void GetNonclientMetrics(NONCLIENTMETRICS *target);
+	void GetIconMetrics(ICONMETRICS *target);
 	BOOL startLoadWindowItem(TCHAR *filename);
 	BOOL startSaveWindowItem(TCHAR *filename);
 	bool isNumStr(TCHAR *buf);
 	void getOption(TCHAR *lpCmdLine);
 	void parseOption(TCHAR *param, int argCount);
 	void getWin10Ver(TCHAR *buf, DWORD major, DWORD minor);
+	bool isValidInput(void);
+	void screenToMetrics(void);
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);
@@ -91,5 +101,8 @@ BOOL CALLBACK MonitorNearMouseCallback(
 	LPARAM dwData
 );
 void adjustCenter(RECT parentRect, HWND parentHWnd, HWND myHWnd);
+
+#define ICON_HOL_SPACING_KEY "IconHolizontalSpacing"
+#define ICON_VER_SPACING_KEY "IconVerticalSpacing"
 
 #endif

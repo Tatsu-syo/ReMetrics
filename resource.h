@@ -65,6 +65,13 @@
 #define IDC_EDIT_SCROLL_HEIGHT          1018
 #define IDC_SPIN10                      1019
 #define IDC_SPIN_SCROLL_HEIGHT          1019
+#define IDC_EDIT_ICON_HOLI              1020
+#define IDC_SPIN_ICON_HOLI              1021
+#define IDC_EDIT_PADDING3               1022
+#define IDC_EDIT_ICON_VERT              1022
+#define IDC_SPIN_ICON_VERT              1023
+#define IDC_STATIC_ICON_HOL             1024
+#define IDC_STATIC_ICON_VER             1025
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -108,7 +115,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32807
-#define _APS_NEXT_CONTROL_VALUE         1009
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

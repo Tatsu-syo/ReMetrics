@@ -17,7 +17,7 @@ The sources for Re-Metrics are distributed under the MIT open source license
 
 #define MAX_LOADSTRING 100
 /** ダイアログテンプレートのダイアログの高さ */
-const int Height_TemplateUnit = 185;
+const int Height_TemplateUnit = 217;
 
 //
 // ダイアログベースアプリケーションフレームワークと
@@ -75,6 +75,8 @@ BaseDialog *ReMetrics::createBaseDialog()
 	menuWidthUpDown = NULL;
 	menuHeightUpDown = NULL;
 	paddingUpDown = NULL;
+	iconHMerginUpDown = NULL;
+	iconVMerginUpDown = NULL;
 
 	return appObj;
 }
@@ -116,6 +118,7 @@ int ReMetrics::OnWindowShow()
 	winVerMajor = LOBYTE(dwver);
 
 	GetNonclientMetrics(&metrics);
+	GetIconMetrics(&iconMetrics);
 
 	// スピンボタンとテキストボックスを対応づける。
 	borderWidthUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_BORDER));
@@ -138,12 +141,16 @@ int ReMetrics::OnWindowShow()
 	menuHeightUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_MENU_HEIGHT));
 	paddingUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_PADDING));
 	paddingUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_PADDING));
+	iconHMerginUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_ICON_HOLI));
+	iconHMerginUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_ICON_HOLI));
+	iconVMerginUpDown = new TwrUpDown(::GetDlgItem(hWnd, IDC_SPIN_ICON_VERT));
+	iconVMerginUpDown->setBuddy(::GetDlgItem(hWnd, IDC_EDIT_ICON_VERT));;
 
 	// 各スピンボタンの範囲を設定する。
 	setItemRange();
 
 	// NONCLIENTMETRICSの設定を画面に反映する。
-	applyWindowSetting(metrics);
+	applyWindowSetting(metrics, iconMetrics);
 
 	adjustWindowSize(&metrics, winVerMajor);
 
@@ -244,7 +251,9 @@ void ReMetrics::parseOption(TCHAR *param, int argCount)
  *
  * @param newMetrics ウインドウ設定
  */
-void ReMetrics::applyWindowSetting(NONCLIENTMETRICS &newMetrics)
+void ReMetrics::applyWindowSetting(
+	NONCLIENTMETRICS &newMetrics,
+	ICONMETRICS &newIconMetrics)
 {
 	TCHAR buf[32];
 
@@ -279,6 +288,12 @@ void ReMetrics::applyWindowSetting(NONCLIENTMETRICS &newMetrics)
 	_stprintf(buf, _T("%d"), newMetrics.iPaddedBorderWidth);
 	padding = buf;
 
+	_stprintf(buf, _T("%d"), newIconMetrics.iHorzSpacing - 32);
+	iconHMergin = buf;
+
+	_stprintf(buf, _T("%d"), newIconMetrics.iVertSpacing - 32);
+	iconVMergin = buf;
+
 	// スピンボタンの位置を設定する。
 	borderWidthUpDown->setPos(newMetrics.iBorderWidth);
 	titleWidthUpDown->setPos(newMetrics.iCaptionWidth);
@@ -290,6 +305,8 @@ void ReMetrics::applyWindowSetting(NONCLIENTMETRICS &newMetrics)
 	menuWidthUpDown->setPos(newMetrics.iMenuWidth);
 	menuHeightUpDown->setPos(newMetrics.iMenuHeight);
 	paddingUpDown->setPos(newMetrics.iPaddedBorderWidth);
+	iconHMerginUpDown->setPos(newIconMetrics.iHorzSpacing - 32);
+	iconVMerginUpDown->setPos(newIconMetrics.iVertSpacing - 32);
 
 	UpdateData(false);
 
@@ -321,6 +338,9 @@ void ReMetrics::setItemRange()
 	menuHeightUpDown->setRange(minMenuHeight, 256);
 
 	paddingUpDown->setRange(0, 256);
+
+	iconHMerginUpDown->setRange(0, 150);
+	iconVMerginUpDown->setRange(0, 150);
 }
 /**
  * フォントに対応する画面要素の最低の高さを求める。
@@ -405,10 +425,11 @@ INT_PTR ReMetrics::OnInitDialog()
 		if (!loadResult) {
 			// NONCLIENTMETRICSの設定を画面に反映する。
 			GetNonclientMetrics(&metrics);
-			applyWindowSetting(metrics);
+			GetIconMetrics(&iconMetrics);
+			applyWindowSetting(metrics, iconMetrics);
 		} else {
 			if (setOnStart) {
-				setMetrics(&metrics);
+				setMetrics(&metrics, &iconMetrics);
 				EndDialog(hWnd, 0);
 
 				return (INT_PTR)FALSE;
@@ -444,6 +465,8 @@ void ReMetrics::UpdateData(bool toObj)
 	DDX_Text(toObj,IDC_EDIT_MENU_WIDTH, menuWidth);
 	DDX_Text(toObj,IDC_EDIT_MENU_HEIGHT, menuHeight);
 	DDX_Text(toObj,IDC_EDIT_PADDING, padding);
+	DDX_Text(toObj, IDC_EDIT_ICON_HOLI, iconHMergin);
+	DDX_Text(toObj, IDC_EDIT_ICON_VERT, iconVMergin);
 }
 
 /**
@@ -469,6 +492,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("18");
 			menuHeight = _T("18");
 			padding = _T("0");
+			iconHMergin = _T("46");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_XP:
@@ -482,6 +507,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("18");
 			menuHeight = _T("18");
 			padding = _T("0");
+			iconHMergin = _T("46");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_XP_LUNA:
@@ -495,6 +522,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("18");
 			menuHeight = _T("19");
 			padding = _T("0");
+			iconHMergin = _T("46");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_VISTA:
@@ -508,6 +537,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("19");
 			menuHeight = _T("20");
 			padding = _T("4");
+			iconHMergin = _T("46");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_7_STD:
@@ -521,6 +552,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("19");
 			menuHeight = _T("20");
 			padding = _T("4");
+			iconHMergin = _T("68");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_7:
@@ -534,6 +567,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("19");
 			menuHeight = _T("20");
 			padding = _T("4");
+			iconHMergin = _T("68");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_8:
@@ -547,6 +582,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("19");
 			menuHeight = _T("19");
 			padding = _T("4");
+			iconHMergin = _T("68");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_10:
@@ -560,6 +597,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			menuWidth = _T("19");
 			menuHeight = _T("19");
 			padding = _T("4");
+			iconHMergin = _T("68");
+			iconVMergin = _T("43");
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_OPEN:
@@ -592,7 +631,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.11\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2017"),
+				_T("Re-Metrics Version 1.20\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2017"),
 				_T("Re-Metricsについて"),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -823,11 +862,13 @@ BOOL ReMetrics::startLoadWindowItem(TCHAR *filename)
 {
 	BOOL loadResult;
 	NONCLIENTMETRICS newMetrics;
+	ICONMETRICS newIconMetrics;
 
 	TCHAR buf[32];
 	DWORD result;
 
 	GetNonclientMetrics(&newMetrics);
+	GetIconMetrics(&newIconMetrics);
 
 	buf[31] = _T('\0');
 	result = GetPrivateProfileString(_T("WindowItemSize"),
@@ -949,10 +990,33 @@ BOOL ReMetrics::startLoadWindowItem(TCHAR *filename)
 	}
 	newMetrics.iPaddedBorderWidth = _tstoi(buf);
 
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T(ICON_HOL_SPACING_KEY),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if (result && isNumStr(buf)) {
+		newIconMetrics.iHorzSpacing = _tstoi(buf);
+	}
+
+	buf[31] = _T('\0');
+	result = GetPrivateProfileString(_T("WindowItemSize"),
+		_T(ICON_VER_SPACING_KEY),
+		_T(""),
+		buf,
+		31,
+		filename);
+	if (result && isNumStr(buf)) {
+		newIconMetrics.iVertSpacing = _tstoi(buf);
+	}
+
 	metrics = newMetrics;
+	iconMetrics = newIconMetrics;
 
 	// NONCLIENTMETRICSの設定を画面に反映する。
-	applyWindowSetting(metrics);
+	applyWindowSetting(metrics, newIconMetrics);
 
 	return TRUE;
 }
@@ -981,6 +1045,15 @@ bool ReMetrics::isNumStr(TCHAR *buf)
 */
 void ReMetrics::OnSave()
 {
+	UpdateData(true);
+
+	// 入力チェックを行う。
+	if (!isValidInput()) {
+		return;
+	}
+	// 画面の項目を反映する。
+	screenToMetrics();
+
 	NCFileDialog *dlg = new NCFileDialog(
 		FALSE,
 		NULL,
@@ -1110,71 +1183,106 @@ BOOL ReMetrics::startSaveWindowItem(TCHAR *filename)
 		return FALSE;
 	}
 
+	_stprintf(buf, _T("%d"), iconMetrics.iHorzSpacing);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T(ICON_HOL_SPACING_KEY),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
+	_stprintf(buf, _T("%d"), iconMetrics.iVertSpacing);
+	result = WritePrivateProfileString(_T("WindowItemSize"),
+		_T(ICON_VER_SPACING_KEY),
+		buf,
+		filename);
+	if (!result) {
+		return FALSE;
+	}
+
 	return TRUE;
 }
 
 /**
- * OKボタン押下時の処理。<br>
- * 入力内容の検査を行った後、画面各部の幅・高さの設定を行う。
+ * 入力項目に誤りがあるか検査する
  *
- * @return true:設定を行った。 false:設定を行わない
+ * @return true:誤りはない FALSE:入力項目に誤りがあった
  */
-bool ReMetrics::OnBnClickedOk()
+bool ReMetrics::isValidInput(void)
 {
 	UpdateData(true);
 
 	if (borderWidth.length() == 0) {
-		MessageBox(hWnd, _T("ウインドウの境界が入力されてません。"), 
+		MessageBox(hWnd, _T("ウインドウの境界が入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (titleWidth.length() == 0) {
-		MessageBox(hWnd, _T("タイトルバーの幅が入力されてません。"), 
+		MessageBox(hWnd, _T("タイトルバーの幅が入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (titleHeight.length() == 0) {
-		MessageBox(hWnd, _T("タイトルバーの高さが入力されてません。"), 
+		MessageBox(hWnd, _T("タイトルバーの高さが入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (scrollWidth.length() == 0) {
-		MessageBox(hWnd, _T("スクロールバーの幅が入力されてません。"), 
+		MessageBox(hWnd, _T("スクロールバーの幅が入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (scrollHeight.length() == 0) {
-		MessageBox(hWnd, _T("スクロールバーの高さが入力されてません。"), 
+		MessageBox(hWnd, _T("スクロールバーの高さが入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (paletteWidth.length() == 0) {
-		MessageBox(hWnd, _T("パレットの幅が入力されてません。"), 
+		MessageBox(hWnd, _T("パレットの幅が入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (paletteHeight.length() == 0) {
-		MessageBox(hWnd, _T("パレットの高さが入力されてません。"), 
+		MessageBox(hWnd, _T("パレットの高さが入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (menuWidth.length() == 0) {
-		MessageBox(hWnd, _T("メニューの幅が入力されてません。"), 
+		MessageBox(hWnd, _T("メニューの幅が入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (menuHeight.length() == 0) {
-		MessageBox(hWnd, _T("メニューの高さが入力されてません。"), 
+		MessageBox(hWnd, _T("メニューの高さが入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (padding.length() == 0) {
-		MessageBox(hWnd, _T("ウインドウ枠内部の幅が入力されてません。"), 
+		MessageBox(hWnd, _T("ウインドウ枠内部の幅が入力されてません。"),
 			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
+	if (iconHMergin.length() == 0) {
+		MessageBox(hWnd, _T("アイコンの間隔(横)が入力されてません。"),
+			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		return false;
+	}
+	if (iconVMergin.length() == 0) {
+		MessageBox(hWnd, _T("アイコンの間隔(縦)が入力されてません。"),
+			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		return false;
+	}
+	return true;
+}
 
+/**
+ * 画面の入力値を内部の設定値に反映する。
+ */
+void ReMetrics::screenToMetrics(void)
+{
 	GetNonclientMetrics(&metrics);
+	GetIconMetrics(&iconMetrics);
 
 	metrics.iBorderWidth = _tstoi(borderWidth.c_str());
 	metrics.iCaptionWidth = _tstoi(titleWidth.c_str());
@@ -1186,8 +1294,31 @@ bool ReMetrics::OnBnClickedOk()
 	metrics.iMenuWidth = _tstoi(menuWidth.c_str());
 	metrics.iMenuHeight = _tstoi(menuHeight.c_str());
 	metrics.iPaddedBorderWidth = _tstoi(padding.c_str());
+	iconMetrics.iHorzSpacing = _tstoi(iconHMergin.c_str()) + 32;
+	iconMetrics.iVertSpacing = _tstoi(iconVMergin.c_str()) + 32;
 
-	setMetrics(&metrics);
+}
+
+
+/**
+ * OKボタン押下時の処理。<br>
+ * 入力内容の検査を行った後、画面各部の幅・高さの設定を行う。
+ *
+ * @return true:設定を行った。 false:設定を行わない
+ */
+bool ReMetrics::OnBnClickedOk()
+{
+	UpdateData(true);
+
+	// 入力チェックを行う。
+	if (!isValidInput()) {
+		return false;
+	}
+
+	// 画面の項目を反映する。
+	screenToMetrics();
+
+	setMetrics(&metrics, &iconMetrics);
 
 	return true;
 }
@@ -1221,7 +1352,25 @@ void ReMetrics::GetNonclientMetrics(NONCLIENTMETRICS *target)
 		0);
 }
 
+/**
+ * ICONMETRICS構造体を取得する。
+ *
+ * @param target ICONMETRICS構造体へのポインタ
+ */
+void ReMetrics::GetIconMetrics(ICONMETRICS *target)
+{
+
+	FillMemory(target, sizeof(ICONMETRICS), 0x00);
+
+	target->cbSize = sizeof(ICONMETRICS);
+	SystemParametersInfo(SPI_GETICONMETRICS,
+		sizeof(ICONMETRICS),
+		target,
+		0);
+}
+
 NONCLIENTMETRICS *s_fontMetrics;
+ICONMETRICS *s_iconMetrics;
 
 /**
  * スレッドで幅を設定する。
@@ -1230,6 +1379,10 @@ NONCLIENTMETRICS *s_fontMetrics;
  */
 unsigned _stdcall setOnThread(void *p)
 {
+	SystemParametersInfo(SPI_SETICONMETRICS,
+		sizeof(ICONMETRICS),
+		s_iconMetrics,
+		SPIF_UPDATEINIFILE); // | SPIF_SENDCHANGE);
 
 	SystemParametersInfo(SPI_SETNONCLIENTMETRICS,
 		sizeof(NONCLIENTMETRICS),
@@ -1246,7 +1399,8 @@ unsigned _stdcall setOnThread(void *p)
  * @param fontMetrics 幅指定用NONCLIENTMETRICS
  */
 void ReMetrics::setMetrics(
-	NONCLIENTMETRICS *fontMetrics
+	NONCLIENTMETRICS *fontMetrics,
+	ICONMETRICS *newIconMetrics
 ) {
 
 	DWORD_PTR ptr;
@@ -1257,6 +1411,7 @@ void ReMetrics::setMetrics(
 		// UIと別スレッドでSystemParametersInfo(SPI_SETNONCLIENTMETRICSを
 		// 実行する。
 		s_fontMetrics = fontMetrics;
+		s_iconMetrics = newIconMetrics;
 
 		uintptr_t startResult = _beginthreadex(NULL, 0, setOnThread, NULL, 0, NULL);
 		if (startResult != 0) {
@@ -1278,6 +1433,11 @@ void ReMetrics::setMetrics(
 		SystemParametersInfo(SPI_SETNONCLIENTMETRICS,
 			sizeof(NONCLIENTMETRICS),
 			fontMetrics,
+			SPIF_UPDATEINIFILE); // | SPIF_SENDCHANGE);
+
+		SystemParametersInfo(SPI_SETICONMETRICS,
+			sizeof(ICONMETRICS),
+			newIconMetrics,
 			SPIF_UPDATEINIFILE); // | SPIF_SENDCHANGE);
 	}
 
@@ -1341,6 +1501,13 @@ INT_PTR ReMetrics::OnSettingChange(WPARAM wParam, LPARAM lParam)
 		structSize,
 		&metrics,
 		0);
+
+	SystemParametersInfo(
+		SPI_GETICONMETRICS,
+		sizeof(ICONMETRICS),
+		&iconMetrics,
+		0);
+
 	adjustWindowSize(&metrics, major);
 	setItemRange();
 
@@ -1393,13 +1560,15 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 	menuHeight = height - borderWidth - clientHeight - metrics->iCaptionHeight;
 
 	// 欲しいクライアント領域の高さ
-	requiredClientHeight = 300;
+	requiredClientHeight = 350;
 	RECT rect;
 	BOOL result;
 
 	rect.left = 4;
 	rect.top = 8;
-	if (result = MapDialogRect(hWnd, &rect)) {
+	result = MapDialogRect(hWnd, &rect);
+	if (result) {
+		// ダイアログベースの単位をスクリーン単位に変換する。
 		requiredClientHeight = MulDiv(Height_TemplateUnit, rect.top, 8);
 	}
 
