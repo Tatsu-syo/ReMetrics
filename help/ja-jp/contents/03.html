@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+Re-Metrics (C) 2012-2020 Tatsuhiko Shoji
+The sources for Re-Metrics are distributed under the MIT open source license
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta http-equiv="content-style-type" content="text/css">
+<link rel="stylesheet" href="ReMetrics.css">
+<title>3.製作履歴</title>
+<link rev=made href="mailto:rxk16664@nifty.ne.jp">
+<link rel="Index" href="Frame.ReMetrics.html">
+<link rel="First" href="01.html">
+<link rel="Last" href="04.html">
+<link rel="Prev" href="02.html">
+<link rel="Next" href="04.html">
+</head>
+<body>
+<h1>3.製作履歴</h1>
+
+<div class="chapter">
+<h2>2017/06/29 Version 1.20</h2>
+<h3>機能追加</h3>
+<ul>
+<li>「アイコンを等位置に配置」「アイコンの自動整列」を指定した際のアイコンの間隔を設定できるようにしました。</li>
+</ul>
+
+<h3>不具合修正</h3>
+<ul>
+<li>設定値を保存する際に画面上の入力値を反映せず、内部で持っていた設定値を保存していた不具合を修正しました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2017/06/04 Version 1.11</h2>
+<ul>
+<li>起動時にメイン画面をカーソルのいるモニタの中央より若干左上に表示するようにしました。</li>
+<li>Windows 10で実行した際に詳細なバージョン情報を表示するようにしました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2016/06/14 Version 1.10</h2>
+<ul>
+<li>コマンドラインから指定したウインドウ設定ファイルを読み込めるようにした他、コマンドラインから指定したウインドウ設定ファイルの内容でウインドウ各部の幅・高さを設定できるようにしました。</li>
+<li>ソースファイルのVisual Studio 2013用ソリューション/プロジェクトファイルをVisual Studio 2015用にしました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2015/08/16 Version 1.07</h2>
+<ul>
+<li>Windows 10用のプリセットを用意しました。</li>
+<li>初期設定で「別スレッドで幅・高さを変更する。」にチェックを入れ、標準では別スレッドで幅・高さの変更を行うようにしました。</li>
+<li>システムDPIに対応して、高DPIでも文字がぼやけないようにしました。</li>
+<li>メニューの「各項目を設定して終了」で終了していなかった不具合を修正しました。</li>
+<li>ソースのプロジェクトファイルをVisual Studio 2008/2013用にそれぞれ用意しました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2015/01/28 Version 1.06</h2>
+<ul>
+<li>画面の各部分の幅・高さの保存と読み込み機能を追加しました。</li>
+<li>ファイルメニューの「設定(S)」の文言を「各項目を設定して終了(S)」に変更しました。</li>
+<li>ソースのプロジェクトファイルをVisual Studio 2013用に変更しました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2014/07/13 Version 1.05</h2>
+<ul>
+<li>別スレッドで幅・高さの設定を変更する設定を追加しました。
+SetPoint(Logicoolのマウス・キーボードユーティリティ)等を起動した環境で幅・高さを設定した時に応答なしになる場合に使用してください。</li>
+<li>Meiryo UIも大っきらい!! Version 2.13に合わせてヘルプメニューにヘルプの表示を追加しました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2014/05/01 Version 1.04</h2>
+<ul>
+<li>ウインドウの境界とクライアント領域の間に入るウインドウの境界の間隔を正しく取得できるようにしました。<br>
+これに伴い、動作環境がWindows Vista以降となりました。</li>
+<li>設定項目「ウインドウ枠内部の幅」をWindows Vista/7に合わせて「ウインドウの境界の間隔」に修正しました。</li>
+<li>プリセット値のうち、Windows Vista、Windows 7ベーシック、Windows 7、Windows 8/8.1の値をウインドウの境界とウインドウの境界の間隔を分けた値にしました。</li>
+<li>タイトルバーの高さ、パレットの高さ、メニューの高さをスピンボタンで設定する場合、現在のフォントで設定できる最小の値以下にできないようにしました。</li>
+<li>タイトルバーの高さ、パレットの高さ、メニューの高さに最小の高さ未満の値を手入力した場合、最小の高さに戻すようにしました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2013/12/29 Version 1.03</h2>
+<ul>
+<li>メニューフォントとフォントサイズによってはボタンが押せなくなる場合があったので、起動時にウインドウサイズを調整するようにしました。</li>
+<li>Windows 8.1のウインドウの各部分のサイズはWindows 8と同一なので、プリセットメニューのWindows 8の表記をWindows 8/8.1としました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2013/10/06 Version 1.02</h2>
+<ul>
+<li>Windows 8.1に備えて、Windowsのバージョンを表示する機能を追加しました。トラブルシューティングにご利用ください。</li>
+<li>Windows 8.1を正しく検出するため、マニフェストを追加しました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2013/02/24 Version 1.01</h2>
+<ul>
+<li>IObit StartMenu 8を起動中にフォントの設定を行うと応答が返らない不具合を修正しました。</li>
+<li>ファイル(F)-終了(X)メニュー選択時に何もしていなかった不具合を修正しました。</li>
+<li>MITライセンスのソースコードを添付しました。</li>
+</ul>
+</div>
+
+<div class="chapter">
+<h2>2012/12/30 Version 1.00</h2>
+<p>
+　初版です。<br>
+</p>
+</div>
+
+</body>
+</html>
