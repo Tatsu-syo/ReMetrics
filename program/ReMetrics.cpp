@@ -864,7 +864,7 @@ void ReMetrics::OnBnClickedWinVer()
 
 	MessageBox(hWnd, 
 		buf,
-		_T("Windows‚Ìƒo[ƒWƒ‡ƒ“"),
+		langResource[DLG_WINVER_TITLE].c_str(),
 		MB_OK | MB_ICONINFORMATION);
 }
 
