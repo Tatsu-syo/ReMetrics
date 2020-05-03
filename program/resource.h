@@ -1,7 +1,3 @@
-//
-// Re-Metrics (C) 2012-2017 Tatsuhiko Shoji
-// The sources for Re-Metrics are distributed under the MIT open source license
-//
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ で生成されたインクルード ファイル。
 // ReMetrics.rc で使用
@@ -71,7 +67,18 @@
 #define IDC_EDIT_ICON_VERT              1022
 #define IDC_SPIN_ICON_VERT              1023
 #define IDC_STATIC_ICON_HOL             1024
+#define IDC_ICON_HORIZONTAL_MARGIN      1024
 #define IDC_STATIC_ICON_VER             1025
+#define IDC_ICON_VERTICAL_MARGIN        1025
+#define IDC_BORDER_WIDTH                1026
+#define IDC_TITLEBAR_WIDTH              1027
+#define IDC_TITLEBAR_HEIGHT             1028
+#define IDC_SCROLL_WIDTH                1029
+#define IDC_PALETTE_WIDTH               1030
+#define IDC_PALETTE_HEIGHT              1031
+#define IDC_MENU_WIDTH                  1032
+#define IDC_MENU_HEIGHT                 1033
+#define IDC_SCROLL_HEIGHT               1034
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -107,6 +114,7 @@
 #define ID_32805                        32805
 #define IDM_SET_10                      32806
 #define IDC_STATIC                      -1
+#define IDC_WINDOW_PADDING              -1
 
 // Next default values for new objects
 // 
@@ -115,7 +123,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32807
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_CONTROL_VALUE         1035
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

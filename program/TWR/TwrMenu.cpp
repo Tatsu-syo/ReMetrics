@@ -22,6 +22,16 @@ TwrMenu::TwrMenu(HWND wnd)
 }
 
 /**
+ * コンストラクタ
+ *
+ * @param オブジェクトに結び付けるウインドウのハンドル
+ */
+TwrMenu::TwrMenu(HMENU menu)
+{
+	menuHandle = menu;
+}
+
+/**
  * メニューのチェック状態を設定する。
  *
  * @param id メニューID
@@ -66,4 +76,47 @@ bool TwrMenu::isChecked(int item)
 	 } else {
 		 return false;
 	 }
+}
+
+/**
+ * メニューの有効状態を設定する。
+ *
+ * @param id メニューID
+ * @param true:有効にする false:有効にしない
+ */
+void TwrMenu::setEnabled(int id, bool enabled)
+{
+	MENUITEMINFO info;
+
+	memset(&info, 0, sizeof(MENUITEMINFO));
+	info.cbSize = sizeof(MENUITEMINFO);
+	info.fMask = MIIM_STATE;
+
+	GetMenuItemInfo(menuHandle, id, FALSE, &info);
+	if (enabled) {
+		if (info.fState & MFS_ENABLED) {
+			info.fState ^= MFS_ENABLED;
+		}
+	} else {
+		info.fState |= MFS_DISABLED;
+	}
+	SetMenuItemInfo(menuHandle, id, FALSE, &info);
+}
+
+/**
+ * メニューの文言を設定する。
+ *
+ * @param position メニューの位置/メニュー項目のID
+ * @param message 設定するメッセージ
+ * @param byPosition 指定方法(TRUE:メニューの位置 FALSE:メニュー項目のID)
+ */
+void TwrMenu::setText(int position, const TCHAR *message, BOOL byPosition)
+{
+	MENUITEMINFO info;
+
+	info.cbSize = sizeof(MENUITEMINFO);
+	info.fMask = MIIM_FTYPE | MIIM_STRING;
+	info.fType = MFT_STRING;
+	info.dwTypeData = (LPTSTR)message;
+	SetMenuItemInfo(menuHandle, position, byPosition, &info);
 }

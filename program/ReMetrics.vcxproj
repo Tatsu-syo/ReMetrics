@@ -173,6 +173,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="iniReader.cpp" />
     <ClCompile Include="ReMetrics.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -188,8 +189,11 @@
     <ClCompile Include="TWR\TwrMenu.cpp" />
     <ClCompile Include="TWR\TwrUpDown.cpp" />
     <ClCompile Include="TWR\TwrWnd.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="iniReader.h" />
+    <ClInclude Include="langdef.h" />
     <ClInclude Include="ReMetrics.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -205,6 +209,7 @@
     <ClInclude Include="TWR\TwrMenu.h" />
     <ClInclude Include="TWR\TwrUpDown.h" />
     <ClInclude Include="TWR\TwrWnd.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ReMetrics.ico" />

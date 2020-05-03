@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 #ifndef MYAPPLI_H
@@ -8,6 +8,8 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include "DialogAppliBase.h"
 #include "TwrUpDown.h"
 #include "TwrMenu.h"
+
+void initializeLocale(void);
 
 class ReMetrics : public DialogAppliBase {
 private:
@@ -74,6 +76,7 @@ private:
 	void getWin10Ver(TCHAR *buf, DWORD major, DWORD minor);
 	bool isValidInput(void);
 	void screenToMetrics(void);
+	void applyResource();
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);

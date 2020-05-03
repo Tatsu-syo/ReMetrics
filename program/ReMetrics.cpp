@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2020 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 // ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。
@@ -12,8 +12,12 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include <commdlg.h>
 #include <process.h>
 #include <shellapi.h>
+#include <locale.h>
+#include <mbctype.h>
 #include "ReMetrics.h"
 #include "NCFileDialog.h"
+#include "util.h"
+#include "langdef.h"
 
 #define MAX_LOADSTRING 100
 /** ダイアログテンプレートのダイアログの高さ */
@@ -28,16 +32,100 @@ const int Height_TemplateUnit = 217;
 ReMetrics *appObj;
 RECT myMonitorLect;
 bool firstMonitor = false;
+bool useResource = false;
+TCHAR langFileName[MAX_PATH];
+TCHAR helpFileName[MAX_PATH];
 
 /**
  * アプリケーションオブジェクトを作成します。
  */
 DialogAppliBase *createAppli()
 {
+	// ロケールに応じた初期化の実施
+	initializeLocale();
+
 	// ここでユーザーのアプリケーションオブジェクトを作成します。
 	appObj = new ReMetrics();
 	return appObj;
 }
+
+/**
+ * 各国語の判定と各国語に合わせた初期化を行います。
+ */
+void initializeLocale(void)
+{
+	TCHAR iniPath[MAX_PATH];
+	TCHAR *p;
+	TCHAR langWork[64];
+	TCHAR findPath[MAX_PATH];
+
+	::GetModuleFileName(NULL, iniPath, _MAX_PATH);
+	p = _tcsrchr(iniPath, '\\');
+	if (p != NULL) {
+		*(p + 1) = '\0';
+	}
+
+	// ロケールの初期化
+	char *localeName = setlocale(LC_ALL, "");
+	// コードページの初期化
+	char *codePageDelim = strchr(localeName, '.');
+	if (codePageDelim != NULL) {
+		_setmbcp(atoi(codePageDelim + 1));
+		codePage = atoi(codePageDelim + 1);
+	} else {
+		_setmbcp(_MB_CP_LOCALE);
+		codePageDelim = 0;
+	}
+	mbstowcs(langWork, localeName, 64);
+
+	//localeName = "aaa";
+	int readResult;
+
+	// Language detection
+	useResource = true;
+
+	_tcscpy(findPath, iniPath);
+	p = _tcsrchr(langWork, _T('.'));
+	if (p != NULL) {
+		*p = _T('\0');
+	}
+	_tcscat(findPath, langWork);
+	_tcscat(findPath, _T(".lng"));
+	WIN32_FIND_DATA fileInfo;
+		
+	HANDLE found = FindFirstFile(findPath, &fileInfo);
+	if (found != INVALID_HANDLE_VALUE) {
+		// 言語_地域形式のファイルがある場合
+		_tcscpy(langFileName, findPath);
+		_tcscpy(helpFileName, langWork);
+		_tcscat(helpFileName, _T(".chm"));
+	}
+	else {
+		// 言語名の切り出し
+		_tcscpy(findPath, iniPath);
+		p = _tcsrchr(langWork, _T('_'));
+		if (p != NULL) {
+			*p = _T('\0');
+		}
+		_tcscat(findPath, langWork);
+		_tcscat(findPath, _T(".lng"));
+		found = FindFirstFile(findPath, &fileInfo);
+		if (found != INVALID_HANDLE_VALUE) {
+			// 言語のファイルがある場合
+			_tcscpy(langFileName, findPath);
+			_tcscpy(helpFileName, iniPath);
+			_tcscat(helpFileName, _T(".chm"));
+		} else {
+			// 言語ファイルが存在しない場合
+			_tcscpy(langFileName, _T(""));
+			_tcscpy(helpFileName, iniPath);
+			_tcscat(helpFileName, _T("English.chm"));
+		}
+	}
+	// Language support routine ends here.
+	readResourceFile(langFileName);
+}
+
 
 /**
  * ダイアログプローシジャ
@@ -419,6 +507,8 @@ INT_PTR ReMetrics::OnInitDialog()
 	// 初期設定では別スレッドで画面の各項目の幅・高さを設定するようにする。
 	appMenu->CheckMenuItem(IDM_ANOTHER, true);
 
+	applyResource();
+
 	if (settingFile[0] != _T('\0')) {
 		BOOL loadResult;
 		loadResult = startLoadWindowItem(settingFile);
@@ -631,8 +721,8 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				_T("Re-Metrics Version 1.20\n\nBy Tatsuhiko Syoji(Tatsu) 2012-2017"),
-				_T("Re-Metricsについて"),
+				langResource[DLG_ABOUT_CREDIT].c_str(),
+				langResource[DLG_ABOUT_TITLE].c_str(),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
 		default:
@@ -755,7 +845,7 @@ void ReMetrics::OnBnClickedWinVer()
 				getWin10Ver(buf, major, minor);
 			} else {
 				_stprintf(buf,
-					_T("Windows Server 2016 (%d.%d)"),
+					_T("Windows Server 2016/2019 (%d.%d)"),
 					major, minor);
 			}
 			break;
@@ -1560,7 +1650,9 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 	menuHeight = height - borderWidth - clientHeight - metrics->iCaptionHeight;
 
 	// 欲しいクライアント領域の高さ
-	requiredClientHeight = 350;
+	requiredClientHeight = 465;
+
+/*
 	RECT rect;
 	BOOL result;
 
@@ -1571,6 +1663,7 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 		// ダイアログベースの単位をスクリーン単位に変換する。
 		requiredClientHeight = MulDiv(Height_TemplateUnit, rect.top, 8);
 	}
+*/
 
 	// 補正後の高さ
 	newHeight = 
@@ -1649,6 +1742,104 @@ void ReMetrics::showHelp(void)
 	
 	// 関連付けられたアプリでドキュメントファイルを表示する。
 	ShellExecute(hWnd,_T("open"),helpFile,NULL,NULL,SW_SHOW);
+}
+
+/**
+ * リソースを各項目に設定する。
+ */
+void ReMetrics::applyResource()
+{
+	HDC hDC = GetDC(this->hWnd);
+
+	HFONT displayFont = CreateFont(
+		-MulDiv(APP_FONTSIZE, GetDeviceCaps(hDC, LOGPIXELSY), 72),
+		0,
+		0,
+		0,
+		FW_NORMAL,
+		FALSE,
+		FALSE,
+		FALSE,
+		_tstoi(langResource[FONT_CHARSET].c_str()),
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		PROOF_QUALITY, // CLEARTYPE_QUALITY,
+		FIXED_PITCH | FF_MODERN,
+		langResource[FONT_FACE].c_str());
+
+	ReleaseDC(this->hWnd, hDC);
+
+	// アプリタイトル
+	setText(langResource[TITLE].c_str());
+
+	// メニュー文字列変更
+	appMenu->setText(0, langResource[MENU_FILE].c_str(), TRUE);
+	appMenu->setText(IDM_OPEN, langResource[MENU_FILE_LOAD].c_str(), FALSE);
+	appMenu->setText(IDM_SAVE, langResource[MENU_FILE_SAVE].c_str(), FALSE);
+	appMenu->setText(IDOK, langResource[MENU_FILE_SET_QUIT].c_str(), FALSE);
+	appMenu->setText(IDM_EXIT, langResource[MENU_FILE_QUIT].c_str(), FALSE);
+
+	appMenu->setText(1, langResource[MENU_PRESET].c_str(), TRUE);
+	appMenu->setText(IDM_SET_2K, langResource[MENU_PRESET_2000].c_str(), FALSE);
+	appMenu->setText(IDM_SET_XP, langResource[MENU_PRESET_XP_CLASSIC].c_str(), FALSE);
+	appMenu->setText(IDM_SET_XP_LUNA, langResource[MENU_PRESET_XP].c_str(), FALSE);
+	appMenu->setText(IDM_SET_VISTA, langResource[MENU_PRESET_VISTA].c_str(), FALSE);
+	appMenu->setText(IDM_SET_7_STD, langResource[MENU_PRESET_7_BASIC].c_str(), FALSE);
+	appMenu->setText(IDM_SET_7, langResource[MENU_PRESET_7].c_str(), FALSE);
+	appMenu->setText(IDM_SET_8, langResource[MENU_PRESET_8].c_str(), FALSE);
+	appMenu->setText(IDM_SET_10, langResource[MENU_PRESET_10].c_str(), FALSE);
+
+	appMenu->setText(2, langResource[MENU_TOOLS].c_str(), TRUE);
+	appMenu->setText(IDM_ANOTHER, langResource[MENU_TOOLS_THREAD].c_str(), FALSE);
+
+	appMenu->setText(3, langResource[MENU_HELP].c_str(), TRUE);
+	appMenu->setText(IDM_HELPTOPIC, langResource[MENU_HELP_HELP].c_str(), FALSE);
+	appMenu->setText(IDM_WINVER, langResource[MENU_HELP_WIN_VER].c_str(), FALSE);
+	appMenu->setText(IDM_ABOUT, langResource[MENU_HELP_ABOUT].c_str(), FALSE);
+
+	setChildText(IDC_BORDER_WIDTH, langResource[DLG_BORDER_WIDTH].c_str());
+	setChildFont(IDC_BORDER_WIDTH, displayFont);
+	setChildText(IDC_TITLEBAR_WIDTH, langResource[DLG_TITLEBAR_WIDTH].c_str());
+	setChildFont(IDC_TITLEBAR_WIDTH, displayFont);
+	setChildText(IDC_TITLEBAR_HEIGHT, langResource[DLG_TITLEBAR_HEIGHT].c_str());
+	setChildFont(IDC_TITLEBAR_HEIGHT, displayFont);
+	setChildText(IDC_SCROLL_WIDTH, langResource[DLG_SCROLL_WIDTH].c_str());
+	setChildFont(IDC_SCROLL_WIDTH, displayFont);
+	setChildText(IDC_SCROLL_HEIGHT, langResource[DLG_SCROLL_HEIGHT].c_str());
+	setChildFont(IDC_SCROLL_HEIGHT, displayFont);
+	setChildText(IDC_PALETTE_WIDTH, langResource[DLG_PALETTE_WIDTH].c_str());
+	setChildFont(IDC_PALETTE_WIDTH, displayFont);
+	setChildText(IDC_PALETTE_HEIGHT, langResource[DLG_PALETTE_HEIGHT].c_str());
+	setChildFont(IDC_PALETTE_HEIGHT, displayFont);
+	setChildText(IDC_MENU_WIDTH, langResource[DLG_MENU_WIDTH].c_str());
+	setChildFont(IDC_MENU_WIDTH, displayFont);
+	setChildText(IDC_MENU_HEIGHT, langResource[DLG_MENU_HEIGHT].c_str());
+	setChildFont(IDC_MENU_HEIGHT, displayFont);
+	setChildText(IDC_WINDOW_PADDING, langResource[DLG_WINDOW_PADDING].c_str());
+	setChildFont(IDC_WINDOW_PADDING, displayFont);
+	setChildText(IDC_ICON_HORIZONTAL_MARGIN, langResource[DLG_ICON_HORIZONTAL_MARGIN].c_str());
+	setChildFont(IDC_ICON_HORIZONTAL_MARGIN, displayFont);
+	setChildText(IDC_ICON_VERTICAL_MARGIN, langResource[DLG_ICON_VERTICAL_MARGIN].c_str());
+	setChildFont(IDC_ICON_VERTICAL_MARGIN, displayFont);
+
+	setChildText(IDOK, langResource[DLG_OK].c_str());
+	setChildFont(IDOK, displayFont);
+	setChildText(IDCANCEL, langResource[DLG_CANCEL].c_str());
+	setChildFont(IDCANCEL, displayFont);
+
+	setChildFont(IDC_EDIT_BORDER, displayFont);
+	setChildFont(IDC_EDIT_TITLE_WIDTH, displayFont);
+	setChildFont(IDC_EDIT_TITLE_HEIGHT, displayFont);
+	setChildFont(IDC_EDIT_SCROLL_WIDTH, displayFont);
+	setChildFont(IDC_EDIT_SCROLL_HEIGHT, displayFont);
+	setChildFont(IDC_EDIT_PALETTE_WIDTH, displayFont);
+	setChildFont(IDC_EDIT_PALETTE_HEIGHT, displayFont);
+	setChildFont(IDC_EDIT_MENU_WIDTH, displayFont);
+	setChildFont(IDC_EDIT_MENU_HEIGHT, displayFont);
+	setChildFont(IDC_EDIT_PADDING, displayFont);
+	setChildFont(IDC_EDIT_ICON_HOLI, displayFont);
+	setChildFont(IDC_EDIT_ICON_VERT, displayFont);
+
 }
 
 /**
@@ -1735,3 +1926,4 @@ void adjustCenter(RECT parentRect, HWND parentHWnd, HWND myHWnd)
 	SetWindowPos(myHWnd, parentHWnd, newLeft, newTop, myWidth, myHeight, SWP_SHOWWINDOW);
 
 }
+
