@@ -907,6 +907,61 @@ void ReMetrics::getWin10Ver(TCHAR *buf, DWORD major, DWORD minor)
 
 }
 
+/**
+ * ファイルダイアログ用のファイルマスク文字列作成
+ *
+ * @param ファイルマスク文字列バッファ
+ * @param ファイルの種類名
+ * @param ファイルのマスク
+ * @param すべてのファイルの種類名
+ * @param すべてのファイルのマスク
+ */
+void createFileMask(
+	TCHAR* buf,
+	const TCHAR* fileMsg,
+	const TCHAR* fileExt,
+	const TCHAR* allMsg,
+	const TCHAR* allExt)
+{
+	TCHAR* pDst = buf;
+	int len;
+
+	len = _tcslen(fileMsg);
+	for (int i = 0; i < len; i++) {
+		*pDst = fileMsg[i];
+		pDst++;
+	}
+	*pDst = _T('\0');
+	pDst++;
+
+	len = _tcslen(fileExt);
+	for (int i = 0; i < len; i++) {
+		*pDst = fileExt[i];
+		pDst++;
+	}
+	*pDst = _T('\0');
+	pDst++;
+
+	len = _tcslen(allMsg);
+	for (int i = 0; i < len; i++) {
+		*pDst = allMsg[i];
+		pDst++;
+	}
+	*pDst = _T('\0');
+	pDst++;
+
+	len = _tcslen(allExt);
+	for (int i = 0; i < len; i++) {
+		*pDst = allExt[i];
+		pDst++;
+	}
+	*pDst = _T('\0');
+	pDst++;
+
+	*pDst = _T('\0');
+	pDst++;
+}
+
 
 
 /**
@@ -914,12 +969,22 @@ void ReMetrics::getWin10Ver(TCHAR *buf, DWORD major, DWORD minor)
 */
 void ReMetrics::OnLoad()
 {
+	TCHAR buf[256];
+
+	createFileMask(
+		buf,
+		langResource[MSG_SETTING_FILE].c_str(),
+		_T("*.ini"),
+		langResource[MSG_ALL_FILE].c_str(),
+		_T("*.*")
+	);
+
 	NCFileDialog *dlg = new NCFileDialog(
 		TRUE,
 		NULL,
 		NULL,
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		_T("設定ファイル(*.ini)\0*.ini\0すべてのファイル(*.*)\0*.*\0\0"),
+		buf,
 		this->getHwnd(),
 		0);
 
@@ -934,8 +999,8 @@ void ReMetrics::OnLoad()
 	if (!loadResult) {
 		MessageBox(
 			this->getHwnd(),
-			_T("ウインドウ設定の読み込みに失敗しました。"),
-			_T("エラー"),
+			langResource[MSG_LOAD_FAIL].c_str(),
+			langResource[MSG_ERROR].c_str(),
 			MB_OK | MB_ICONEXCLAMATION);
 	}
 
@@ -1144,12 +1209,22 @@ void ReMetrics::OnSave()
 	// 画面の項目を反映する。
 	screenToMetrics();
 
+	TCHAR buf[256];
+
+	createFileMask(
+		buf,
+		langResource[MSG_SETTING_FILE].c_str(),
+		_T("*.ini"),
+		langResource[MSG_ALL_FILE].c_str(),
+		_T("*.*")
+	);
+
 	NCFileDialog *dlg = new NCFileDialog(
 		FALSE,
 		NULL,
 		NULL,
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		_T("設定ファイル(*.ini)\0*.ini\0すべてのファイル(*.*)\0*.*\0\0"),
+		buf,
 		this->getHwnd(),
 		0);
 
@@ -1164,8 +1239,8 @@ void ReMetrics::OnSave()
 	if (!saveResult) {
 		MessageBox(
 			this->getHwnd(),
-			_T("ウインドウ設定の保存に失敗しました。"),
-			_T("エラー"),
+			langResource[MSG_SAVE_FAIL].c_str(),
+			langResource[MSG_ERROR].c_str(),
 			MB_OK | MB_ICONEXCLAMATION);
 	}
 
@@ -1304,63 +1379,87 @@ bool ReMetrics::isValidInput(void)
 	UpdateData(true);
 
 	if (borderWidth.length() == 0) {
-		MessageBox(hWnd, _T("ウインドウの境界が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_WINDOW_BORDER].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (titleWidth.length() == 0) {
-		MessageBox(hWnd, _T("タイトルバーの幅が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_TITLEBAR_WIDTH].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (titleHeight.length() == 0) {
-		MessageBox(hWnd, _T("タイトルバーの高さが入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_TITLEBAR_HEIGHT].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (scrollWidth.length() == 0) {
-		MessageBox(hWnd, _T("スクロールバーの幅が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_SCROLL_WIDTH].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (scrollHeight.length() == 0) {
-		MessageBox(hWnd, _T("スクロールバーの高さが入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_SCROLL_HEIGHT].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (paletteWidth.length() == 0) {
-		MessageBox(hWnd, _T("パレットの幅が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_PALETTE_WIDTH].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (paletteHeight.length() == 0) {
-		MessageBox(hWnd, _T("パレットの高さが入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_PALETTE_HEIGHT].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (menuWidth.length() == 0) {
-		MessageBox(hWnd, _T("メニューの幅が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_MENU_WIDTH].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (menuHeight.length() == 0) {
-		MessageBox(hWnd, _T("メニューの高さが入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_MENU_HEIGHT].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (padding.length() == 0) {
-		MessageBox(hWnd, _T("ウインドウ枠内部の幅が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_WINDOW_PADDING].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (iconHMergin.length() == 0) {
-		MessageBox(hWnd, _T("アイコンの間隔(横)が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_ICON_HORIZONTAL_MARGIN].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	if (iconVMergin.length() == 0) {
-		MessageBox(hWnd, _T("アイコンの間隔(縦)が入力されてません。"),
-			_T("エラー"), MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWnd,
+			langResource[MSG_NO_ICON_VERTICAL_MARGIN].c_str(),
+			langResource[MSG_ERROR].c_str(),
+			MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 	return true;
