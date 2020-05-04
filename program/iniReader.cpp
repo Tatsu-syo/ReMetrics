@@ -1,6 +1,6 @@
 /*
-noMeiryoUI (C) 2005,2012-2018 Tatsuhiko Shoji
-The sources for noMeiryoUI are distributed under the MIT open source license
+Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
+The sources for Re-Metrics are distributed under the MIT open source license
 */
 #include <stdio.h>
 #include <windows.h>
