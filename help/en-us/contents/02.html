@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<!--
+Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
+The sources for Re-Metrics are distributed under the MIT open source license
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="content-script-type" content="text/javascript">
+<meta http-equiv="content-style-type" content="text/css">
+<link rel="stylesheet" href="ReMetrics.css">
+<title>2.How to use</title>
+<link rev="made" href="mailto:rxk16664@nifty.ne.jp">
+<link rel="Index" href="Frame.ReMetrics.html">
+<link rel="First" href="01.html">
+<link rel="Last" href="04.html">
+<link rel="Prev" href="01.html">
+<link rel="Next" href="03.html">
+</head>
+<body>
+<h1>2.How to use</h1>
+
+<div class="chapter">
+<h2>2.1 Run program</h2>
+<p>
+Run ReMetrics.exe.<br>
+This icon(<img src="ReMetricsIcon.PNG" width="32" height="32" alt="Re-Metrics icon">).<br>
+You will see below window.<br>
+</p>
+
+<p>
+<img src="ReMetrics.PNG" width="317" height="506" alt="Re-Metrics window"><br>
+</p>
+
+</div>
+
+<div class="chapter">
+<h2>2.2 Operation</h2>
+<h3>Basic operation</h3>
+<p>
+When window displayed, you see window element name and size.<br>
+Please input size in textbox or change size clicking spin button.<br>
+<br>
+When setting ended, press OK button.<br>
+You can change wildow element size.(Remark, OS adjust element size)<br>
+<br>
+When you press cancel button, program exits without action.<br>
+</p>
+
+<h3>Menu</h3>
+
+<ul>
+<li>File
+<ul>
+<li>Load window settings...<br>
+Load window settings from file. Please select window settings file.<br>
+You can create window settings file by Save window settings...<br>
+</li>
+<li>Save window settings...<br>
+Save window settings into file.<br>
+Please input window settings file name.<br>
+</li>
+<li>Set window settings and quit<br>
+Set window settings and quit program. Same as OK button.<br>
+</li>
+<li>Exit<br>
+Exit program without any action. Same as Cancel button.<br>
+</li>
+</ul>
+</li>
+<li>Preset<br>
+You can choose window settings each Windows.<br>
+<ul>
+<li>Windows 2000</li>
+<li>Windows XP Classic</li>
+<li>Windows XP</li>
+<li>Windows Vista</li>
+<li>Windows 7 Basic</li>
+<li>Windows 7</li>
+<li>Windows 8/8.1</li>
+<li>Windows 10</li>
+</ul>
+</li>
+<li>Tols<br>
+<ul>
+	<li>Set window settings in separated thread.<br>
+	If some resident programs block program exit, check this option.<br>
+	</li>
+</ul>
+</li>
+<li>Help<br>
+<ul>
+<li>Help<br>
+Show help file.<br>
+</li>
+<li>Windows Version<br>
+Show Windows version information.<br>
+Use this information in troubleshooting.<br>
+</li>
+<li>About Re-Metrics<br>
+Show this program's version.<br>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<div class="chapter">
+<h2>2.3 Setting items</h2>
+
+<ul>
+<li>Border width<br>
+Window's border width.<br>
+On Windows 10, you can adjust window resize boundary.<br>
+</li>
+<li>Title bar width<br>
+Button width in title bar.
+</li>
+<li>Title bar height<br>
+Height of title bar.<br>
+</li>
+<li>Scroll bar width<br>
+Width of scroll bar and it's button.<br>
+</li>
+<li>Scroll bar height<br>
+Height of scroll bar and it's button.<br>
+</li>
+<li>Palette width<br>
+Width of palette and it's button.<br>
+</li>
+<li>Palette height<br>
+Height of palette and it's button.<br>
+</li>
+<li>Menu width<br>
+Menu bar's button width in MDI application.<br>
+</li>
+<li>Menu height<br>
+Height of menu bar and Menu bar's button.<br>
+</li>
+<li>Padded border width<br>
+Width of window padding.<br>
+</li>
+<li>Icon horizontal spacing<br>
+Width of icon spacing.<br>
+</li>
+<li>Icon vertical spacing<br>
+Height of icon spacing.<br>
+</li>
+</ul>
+<p>
+Icon horizontal spacing and icon vertical spacing are enabled after &quot;&quot; or &quot;&quot;.<br>
+</p>
+
+</div>
+
+<div class="chapter">
+<h2><a id="CommandLine">2.4 Command line option</a></h2>
+<p>
+You can set window settings in command line<br>
+<kbd>Re-Metrics window settings file name [-set]</kbd><br>
+<br>
+You can create window settings file by this program.<br>
+If window settings file countains white space, surround file name in double quote.<br>
+<br>
+If you specify <kbd>-set</kbd> after window setting file, program sets window settings from window settings file and program exits.<br>
+Use this option in batch file or launcher.<br>
+</p>
+
+<h3>Example 1. Load MySet.ini on running.</h3>
+<p>
+<kbd>ReMetrics MySet.ini</kbd>
+</p>
+
+<h3>Example 2. Setting window settings from Your Settings.ini</h3>
+<p>
+<kbd>ReMetrics "Your Settings.ini" -set</kbd>
+</p>
+
+</div>
+
+</body>
+</html>

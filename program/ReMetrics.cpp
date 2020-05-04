@@ -97,7 +97,8 @@ void initializeLocale(void)
 	if (found != INVALID_HANDLE_VALUE) {
 		// 言語_地域形式のファイルがある場合
 		_tcscpy(langFileName, findPath);
-		_tcscpy(helpFileName, langWork);
+		_tcscpy(helpFileName, iniPath);
+		_tcscat(helpFileName, langWork);
 		_tcscat(helpFileName, _T(".chm"));
 	}
 	else {
@@ -114,6 +115,7 @@ void initializeLocale(void)
 			// 言語のファイルがある場合
 			_tcscpy(langFileName, findPath);
 			_tcscpy(helpFileName, iniPath);
+			_tcscat(helpFileName, langWork);
 			_tcscat(helpFileName, _T(".chm"));
 		} else {
 			// 言語ファイルが存在しない場合
@@ -728,7 +730,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				langResource[DLG_ABOUT_CREDIT].c_str(),
+				(langResource[DLG_ABOUT_CREDIT] + _T("\n") + langResource[DLG_ABOUT_CREDIT2]).c_str(),
 				langResource[DLG_ABOUT_TITLE].c_str(),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
@@ -1838,16 +1840,9 @@ INT_PTR ReMetrics::OnLostFocus(WPARAM wParam, LPARAM lParam)
  */
 void ReMetrics::showHelp(void)
 {
-	// 実行ファイルの情報を得るためのバッファ群
-	TCHAR path[_MAX_PATH+1],drive[_MAX_DRIVE+1],dir[_MAX_DIR+1],helpFile[_MAX_PATH+1];
 
-	// 実行ファイルのあるところのBShelp.htmlのパス名を生成する。
-	::GetModuleFileName(NULL,path,_MAX_PATH);
-	::_tsplitpath(path,drive,dir,NULL,NULL);
-	::_stprintf(helpFile,_T("%s%s%s"),drive,dir,_T("ReMetrics.html"));
-	
 	// 関連付けられたアプリでドキュメントファイルを表示する。
-	ShellExecute(hWnd,_T("open"),helpFile,NULL,NULL,SW_SHOW);
+	ShellExecute(hWnd,_T("open"), helpFileName,NULL,NULL,SW_SHOW);
 }
 
 /**
