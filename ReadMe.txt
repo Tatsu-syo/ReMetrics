@@ -1,8 +1,8 @@
 ﻿Re-Metrics source file package
-By Tatsuhiko Syoji(Tatsu) 2012-2017
+By Tatsuhiko Syoji(Tatsu) 2012-2017,2020
 
 [必要となるプログラム]
-・Visual Studio 2008/2015(VC++)
+・Visual Studio 2008/2015以降(VC++)
 
 [ファイル]
 ReadMe.txt:本ファイルです。
@@ -11,8 +11,10 @@ ReMetrics_2008.sln : Visual Studio 2008用ソリューションファイルで�
 ReMetrics_2008.vcproj : Visual Studio 2008用プロジェクトファイルです。
 ReMetrics.sln : Visual Studio 2015用ソリューションファイルです。
 ReMetrics.vcxproj : Visual Studio 2015用プロジェクトファイルです。
-TWRフォルダ配下のファイル : GUI構築に使用したファイルです。
-その他のファイル : Re-Metrics自身のソースファイルです。
+programs/TWRフォルダ配下のファイル : GUI構築に使用したファイルです。
+programs/その他のファイル : Re-Metrics自身のソースファイルです。
+lang/*.lng : 言語ファイルです。
+help/*/* : ヘルプファイルのソースファイルです。
 
 [使い方]
 1.まず、本アーカイブをディレクトリ付きで展開します。
