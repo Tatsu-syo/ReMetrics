@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\iniReader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ReMetrics.cpp"
 				>
 			</File>
@@ -199,6 +203,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\util.cpp"
+				>
 			</File>
 			<Filter
 				Name="TWR"
@@ -243,6 +251,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\iniReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\langdef.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ReMetrics.h"
 				>
 			</File>
@@ -256,6 +272,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util.h"
 				>
 			</File>
 			<Filter
