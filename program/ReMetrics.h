@@ -10,6 +10,8 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include "TwrMenu.h"
 
 void initializeLocale(void);
+/** GetDpiForMonitor API‚Ì’è‹` */
+typedef HRESULT(WINAPI* FGETDPIFORMONITOR)(HMONITOR hmonitor, int dpiType, UINT* dpiX, UINT* dpiY);
 
 class ReMetrics : public DialogAppliBase {
 private:
@@ -51,6 +53,7 @@ private:
 
 	TCHAR settingFile[MAX_PATH];
 	bool setOnStart;
+	UINT dpiY;
 
 	bool OnBnClickedOk();
 	void OnBnClickedWinVer();
@@ -77,6 +80,7 @@ private:
 	bool isValidInput(void);
 	void screenToMetrics(void);
 	void applyResource();
+	void getDpi();
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);

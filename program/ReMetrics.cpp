@@ -206,7 +206,9 @@ int ReMetrics::OnWindowShow()
 
 	dwver = GetVersion();
 	winVerMajor = LOBYTE(dwver);
-
+	
+	dpiY = 96;
+	getDpi();
 	GetNonclientMetrics(&metrics);
 	GetIconMetrics(&iconMetrics);
 
@@ -1706,7 +1708,7 @@ INT_PTR ReMetrics::OnSettingChange(WPARAM wParam, LPARAM lParam)
 		&iconMetrics,
 		0);
 
-	adjustWindowSize(&metrics, major);
+	// adjustWindowSize(&metrics, major);
 	setItemRange();
 
 	return (INT_PTR)TRUE;
@@ -1758,7 +1760,7 @@ void ReMetrics::adjustWindowSize(NONCLIENTMETRICS *metrics, int winVerMajor)
 	menuHeight = height - borderWidth - clientHeight - metrics->iCaptionHeight;
 
 	// 欲しいクライアント領域の高さ
-	requiredClientHeight = 465;
+	requiredClientHeight = 480 * dpiY / 96;
 
 /*
 	RECT rect;
@@ -1846,6 +1848,37 @@ void ReMetrics::showHelp(void)
 }
 
 /**
+ * DPIを取得する。
+ */
+void ReMetrics::getDpi()
+{
+	UINT dpiX = 96;
+	HMONITOR hmonitor;
+	DWORD dwver;
+	dwver = GetVersion();
+	int winVer = LOBYTE(dwver);
+	int minorVer = HIBYTE(dwver);
+	/** Shcore.dllのインスタンスハンドル */
+	HINSTANCE hShcore = NULL;
+	/** GetDpiPerMonitor APIのエントリポイント */
+	FGETDPIFORMONITOR GetDpiForMonitor = NULL;
+
+	if ((winVer > 6) || ((winVer == 6) && (minorVer >= 3))) {
+		hShcore = LoadLibrary(_T("shcore.dll"));
+		GetDpiForMonitor = (FGETDPIFORMONITOR)GetProcAddress(hShcore, "GetDpiForMonitor");
+	}
+
+	if (GetDpiForMonitor != NULL) {
+		/* まず、アプリケーションのウインドウが表示されているモニタを取得する。 */
+		hmonitor = MonitorFromWindow(this->hWnd, MONITOR_DEFAULTTONEAREST);
+		/* DPIを取得する。 */
+		GetDpiForMonitor(hmonitor, 0, &dpiX, &dpiY);
+		// hmonitorは閉じてはいけない。閉じるとデバッガでエラーが出る。
+	}
+
+}
+
+/**
  * リソースを各項目に設定する。
  */
 void ReMetrics::applyResource()
@@ -1853,7 +1886,7 @@ void ReMetrics::applyResource()
 	HDC hDC = GetDC(this->hWnd);
 
 	HFONT displayFont = CreateFont(
-		-MulDiv(APP_FONTSIZE, GetDeviceCaps(hDC, LOGPIXELSY), 72),
+		0 - MulDiv(APP_FONTSIZE, dpiY, 72),
 		0,
 		0,
 		0,
