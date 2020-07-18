@@ -732,7 +732,10 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)0;
 		case IDM_ABOUT:
 			MessageBox(hWnd, 
-				(langResource[DLG_ABOUT_CREDIT] + _T("\n") + langResource[DLG_ABOUT_CREDIT2]).c_str(),
+				(
+					langResource[DLG_ABOUT_VERSION] + _T("\n") +
+					langResource[DLG_ABOUT_CREDIT] + _T("\n") +
+					langResource[DLG_ABOUT_CREDIT2]).c_str(),
 				langResource[DLG_ABOUT_TITLE].c_str(),
 				MB_OK | MB_ICONINFORMATION);
 			return (INT_PTR)0;
