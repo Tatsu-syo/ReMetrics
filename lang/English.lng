@@ -4,7 +4,7 @@
 ;In RESOURCE section,
 ;FONT_FACE key is dialog font name, other key is message.
 [RESOURCE]
-FONT_FACE=System
+FONT_FACE=Segoe UI
 FONT_CHARSET=0
 TITLE=Re-Metrics
 MENU_FILE=&File

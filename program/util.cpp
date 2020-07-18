@@ -50,7 +50,7 @@ void readResourceItem(TCHAR *file, TCHAR *key, TCHAR *fallback)
 void readResourceFile(TCHAR *file)
 {
 	readResourceItem(file, _T("FONT_FACE"),
-		_T("System")
+		_T("Segoe UI")
 	);
 	readResourceItem(file, _T("FONT_CHARSET"),
 		_T("1")
@@ -167,7 +167,7 @@ void readResourceFile(TCHAR *file)
 		_T("About Re-Metrics")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_VERSION"),
-		_T("Re-Metrics Version 1.30")
+		_T("Re-Metrics Version 1.3１")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT"),
 		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020")
