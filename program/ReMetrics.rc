@@ -179,12 +179,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "T.Syoji's Personal Development"
             VALUE "FileDescription", "Re-Metrics"
-            VALUE "FileVersion", "1.3.1.0"
+            VALUE "FileVersion", "1.3.2.0"
             VALUE "InternalName", "ReMetrics"
             VALUE "LegalCopyright", "Copyright (C) Tatsuhiko Syoji 2012-2017,2020"
             VALUE "OriginalFilename", "ReMetrics.exe"
             VALUE "ProductName", "Re-Metrics"
-            VALUE "ProductVersion", "1.3.1.0"
+            VALUE "ProductVersion", "1.3.2.0"
         END
     END
     BLOCK "VarFileInfo"
