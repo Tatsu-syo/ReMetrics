@@ -1,31 +1,34 @@
-﻿Re-Metrics source file package
-By Tatsuhiko Syoji(Tatsu) 2012-2017,2020
+﻿Re-Metrics
+By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021
 
-[必要となるプログラム]
-・Visual Studio 2008/2015以降(VC++)
+[What's this?]
+This program sets window settings on Windows 8.1/10/11.
 
-[ファイル]
-ReadMe.txt:本ファイルです。
-LICENSE.txt : MITライセンスの条文です。
-programs/ReMetrics_2008.sln : Visual Studio 2008用ソリューションファイルです。
-programs/ReMetrics_2008.vcproj : Visual Studio 2008用プロジェクトファイルです。
-programs/ReMetrics.sln : Visual Studio 2015以降用ソリューションファイルです。
-programs/ReMetrics.vcxproj : Visual Studio 2015以降用プロジェクトファイルです。
-programs/TWRフォルダ配下のファイル : GUI構築に使用したファイルです。
-programs/その他のファイル : Re-Metrics自身のソースファイルです。
-lang/*.lng : 言語ファイルです。
-help/*/* : ヘルプファイルのソースファイルです。
+[Required programs]
+・Visual Studio 2008/2019/2022
 
-[使い方]
-1.まず、本アーカイブをディレクトリ付きで展開します。
-2.ReMetrics.slnを開きます。
-3.ビルドを行うと実行ファイルが生成されます。
+[Source Files]
+ReadMe.txt:This file.
+LICENSE.txt : MIT license.
+programs/ReMetrics_2008.sln : Visual Studio 2008 solution file
+programs/ReMetrics_2008.vcproj : Visual Studio 2008 project file.
+programs/ReMetrics.sln : Visual Studio 2019/2022 solution file.
+programs/ReMetrics.vcxproj : Visual Studio 2019/2022 project file.
+programs/TWR/* : My private GUI tool kit.
+programs/* : Source files for Re-Metrics.
+lang/*.lng : Language files.
+help/*/* : Source files for help file.
 
-[ライセンス]
-MITライセンス(http://opensource.org/licenses/mit-license.php)に従います。
+[Build]
+1.Extruct this archive.
+2.Onen ReMetrics.sln .
+3.Build files.
 
-[作者]
-庄子 達彦(Tatsu)
+[license]
+MIT license(http://opensource.org/licenses/mit-license.php)に従います。
+
+[Author]
+Tatsuhiko Syoji
 E-mail Address rxk16664@nifty.ne.jp
-My Web page http://homepage3.nifty.com/Tatsu_syo/index.html
+My Web page http://tatsu.life.coocan.jp/index.html
 ------------------------------------------------------------------------
