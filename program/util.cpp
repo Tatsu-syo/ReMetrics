@@ -167,10 +167,10 @@ void readResourceFile(TCHAR *file)
 		_T("About Re-Metrics")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_VERSION"),
-		_T("Re-Metrics Version 1.32")
+		_T("Re-Metrics Version 1.33")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT"),
-		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020")
+		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT2"),
 		_T("Translate:Tatsu")

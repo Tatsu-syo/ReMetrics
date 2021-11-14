@@ -2,4 +2,8 @@
 # この .gitignore ファイルは Microsoft(R) Visual Studio によって自動的に作成されました。
 ################################################################################
 
-/program/.vs/ReMetrics
+/program/.vs
+/program/Debug_2008
+/program/Debug_2019
+/program/Release_2008
+/program/Release_2019

@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2020,2021 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 #ifndef MYAPPLI_H
@@ -81,6 +81,8 @@ private:
 	void screenToMetrics(void);
 	void applyResource();
 	void getDpi();
+	void setWin10Setting();
+	void setWin11Setting();
 
 protected:
 	INT_PTR OnCommand(WPARAM wParam, LPARAM lParam);
@@ -108,6 +110,7 @@ BOOL CALLBACK MonitorNearMouseCallback(
 	LPARAM dwData
 );
 void adjustCenter(RECT parentRect, HWND parentHWnd, HWND myHWnd);
+BOOL isWin11OrLater();
 
 #define ICON_HOL_SPACING_KEY "IconHolizontalSpacing"
 #define ICON_VER_SPACING_KEY "IconVerticalSpacing"

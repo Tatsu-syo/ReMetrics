@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2020,2021 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 #define FONT_FACE 0
@@ -62,3 +62,4 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #define MSG_NO_WINDOW_PADDING 57
 #define MSG_NO_ICON_HORIZONTAL_MARGIN 58
 #define MSG_NO_ICON_VERTICAL_MARGIN 59
+#define MENU_PRESET_11 60

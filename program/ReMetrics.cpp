@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2020,2021 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 // ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。
@@ -688,18 +688,11 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_SET_10:
-			borderWidth = _T("1");
-			titleWidth = _T("36");
-			titleHeight = _T("22");
-			scrollWidth = _T("17");
-			scrollHeight = _T("17");
-			paletteWidth = _T("22");
-			paletteHeight = _T("22");
-			menuWidth = _T("19");
-			menuHeight = _T("19");
-			padding = _T("4");
-			iconHMergin = _T("68");
-			iconVMergin = _T("43");
+			setWin10Setting();
+			UpdateData(false);
+			return (INT_PTR)0;
+		case IDM_SET_11:
+			setWin11Setting();
 			UpdateData(false);
 			return (INT_PTR)0;
 		case IDM_OPEN:
@@ -747,6 +740,44 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 	}
 	return BaseDialog::OnCommand(wParam, lParam);
 
+}
+
+/**
+ * Windows 10のWindow Metricを設定する。
+ */
+void ReMetrics::setWin10Setting()
+{
+	borderWidth = _T("1");
+	titleWidth = _T("36");
+	titleHeight = _T("22");
+	scrollWidth = _T("17");
+	scrollHeight = _T("17");
+	paletteWidth = _T("22");
+	paletteHeight = _T("22");
+	menuWidth = _T("19");
+	menuHeight = _T("19");
+	padding = _T("4");
+	iconHMergin = _T("68");
+	iconVMergin = _T("43");
+}
+
+/**
+ * Windows 11のWindow Metricを設定する。
+ */
+void ReMetrics::setWin11Setting()
+{
+	borderWidth = _T("1");
+	titleWidth = _T("36");
+	titleHeight = _T("22");
+	scrollWidth = _T("17");
+	scrollHeight = _T("17");
+	paletteWidth = _T("22");
+	paletteHeight = _T("22");
+	menuWidth = _T("19");
+	menuHeight = _T("19");
+	padding = _T("4");
+	iconHMergin = _T("100");
+	iconVMergin = _T("75");
 }
 
 /**
@@ -859,7 +890,7 @@ void ReMetrics::OnBnClickedWinVer()
 				getWin10Ver(buf, major, minor);
 			} else {
 				_stprintf(buf,
-					_T("Windows Server 2016/2019 (%d.%d)"),
+					_T("Windows Server 2016/2019/2022 (%d.%d)"),
 					major, minor);
 			}
 			break;
@@ -883,7 +914,7 @@ void ReMetrics::OnBnClickedWinVer()
 }
 
 /**
- * Windows 10のバージョンを取得する。
+ * Windows 10/11のバージョンを取得する。
  *
  * @param buf バージョン番号格納先
  * @param major メジャーバージョン
@@ -925,9 +956,14 @@ void ReMetrics::getWin10Ver(TCHAR *buf, DWORD major, DWORD minor)
 		RegCloseKey(key);
 	}
 
+	int osVer = 10;
+	if (isWin11OrLater()) {
+		osVer = 11;
+	}
+
 	_stprintf(buf,
-		_T("Windows 10 (%d.%d) Version %s Build %s.%d"),
-		major, minor, release, build, ubr);
+		_T("Windows %d (%d.%d) Version %s Build %s.%d"),
+		osVer, major, minor, release, build, ubr);
 
 }
 
@@ -1935,6 +1971,7 @@ void ReMetrics::applyResource()
 	appMenu->setText(IDM_SET_7, langResource[MENU_PRESET_7].c_str(), FALSE);
 	appMenu->setText(IDM_SET_8, langResource[MENU_PRESET_8].c_str(), FALSE);
 	appMenu->setText(IDM_SET_10, langResource[MENU_PRESET_10].c_str(), FALSE);
+	appMenu->setText(IDM_SET_11, langResource[MENU_PRESET_11].c_str(), FALSE);
 
 	appMenu->setText(2, langResource[MENU_TOOLS].c_str(), TRUE);
 	appMenu->setText(IDM_ANOTHER, langResource[MENU_TOOLS_THREAD].c_str(), FALSE);
@@ -2072,5 +2109,43 @@ void adjustCenter(RECT parentRect, HWND parentHWnd, HWND myHWnd)
 	}
 	SetWindowPos(myHWnd, parentHWnd, newLeft, newTop, myWidth, myHeight, SWP_SHOWWINDOW);
 
+}
+
+/**
+ * Windows 11かどうか判別する。
+ *
+ * @return TRUE:Windows 11 or later FALSE:Windows 10
+ */
+BOOL isWin11OrLater()
+{
+	OSVERSIONINFOEX osvi;
+	DWORDLONG dwlConditionMask = 0;
+	int op = VER_GREATER_EQUAL;
+
+	// Initialize the OSVERSIONINFOEX structure.
+
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	osvi.dwMajorVersion = 10;
+	osvi.dwMinorVersion = 0;
+	osvi.wServicePackMajor = 0;
+	osvi.wServicePackMinor = 0;
+	osvi.dwBuildNumber = 22000;
+
+	// Initialize the condition mask.
+
+	VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMAJOR, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMINOR, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_BUILDNUMBER, op);
+
+	// Perform the test.
+
+	return VerifyVersionInfo(
+		&osvi,
+		VER_MAJORVERSION | VER_MINORVERSION |
+		VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR | VER_BUILDNUMBER,
+		dwlConditionMask);
 }
 
