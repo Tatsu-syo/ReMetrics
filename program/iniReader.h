@@ -8,9 +8,9 @@ The sources for Re-Metrics are distributed under the MIT open source license
 #include <tchar.h>
 
 DWORD GetPrivateProfileStringExT(
-	char *sectionName,
-	TCHAR *keyName,
-	TCHAR *defaultValue,
+	const char *sectionName,
+	const TCHAR *keyName,
+	const TCHAR *defaultValue,
 	TCHAR *returnString,
 	DWORD returnSize,
 	TCHAR *iniFileName,

@@ -76,9 +76,9 @@ char *searchAndDelimit(char *start, char delimiter)
  * @return バッファに格納された文字数
  */
 DWORD GetPrivateProfileStringExT(
-	char *sectionName,
-	TCHAR *keyName,
-	TCHAR *defaultValue,
+	const char *sectionName,
+	const TCHAR *keyName,
+	const TCHAR *defaultValue,
 	TCHAR *returnString,
 	DWORD returnSize,
 	TCHAR *iniFileName,

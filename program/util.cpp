@@ -1,5 +1,5 @@
 ﻿/*
-Re-Metrics (C) 2012-2017,2020 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2021 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 
@@ -18,7 +18,7 @@ int codePage = 0;
  * @param key キー名
  * @param 読み込めなかった時の文字列
  */
-void readResourceItem(TCHAR *file, TCHAR *key, TCHAR *fallback)
+void readResourceItem(TCHAR *file, const TCHAR *key, const TCHAR *fallback)
 {
 	TCHAR buf[255];
 	int len = 0;
@@ -230,6 +230,9 @@ void readResourceFile(TCHAR *file)
 	);
 	readResourceItem(file, _T("MSG_NO_ICON_VERTICAL_MARGIN"),
 		_T("No vertical icon margin.")
+	);
+	readResourceItem(file, _T("MENU_PRESET_11"),
+		_T("Windows 11")
 	);
 }
 
