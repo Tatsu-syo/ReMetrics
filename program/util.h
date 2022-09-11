@@ -20,5 +20,6 @@ extern std::vector<tstring> langResource;
 extern int codePage;
 
 void readResourceFile(TCHAR *file);
+size_t utf8toUtf16(tstring& dst, const char* src);
 
 #endif

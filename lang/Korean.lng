@@ -1,0 +1,67 @@
+; Re-Metrics (C) 2012-2022 Tatsuhiko Shoji
+; The sources for Re-Metrics are distributed under the MIT open source license
+
+;In RESOURCE section,
+;FONT_FACE key is dialog font name, other key is message.
+[RESOURCE]
+FONT_FACE=맑은 고딕
+FONT_CHARSET=129
+TITLE=Re-Metrics
+MENU_FILE=파일(&F)
+MENU_FILE_LOAD=불러오기...(&O)
+MENU_FILE_SAVE=윈도우 설정 저장...(&A)
+MENU_FILE_SET_QUIT=윈도우 설정 저장 후 종료(&S)
+MENU_FILE_QUIT=나가기(&X)
+MENU_PRESET=프리셋(&P)
+MENU_PRESET_2000=Windows 2000
+MENU_PRESET_XP_CLASSIC=Windows XP Classic
+MENU_PRESET_XP=Windows XP
+MENU_PRESET_VISTA=Windows Vista
+MENU_PRESET_7_BASIC=Windows 7 Basic
+MENU_PRESET_7=Windows 7
+MENU_PRESET_8=Windows 8/8.1
+MENU_PRESET_10=Windows 10
+MENU_PRESET_11=Windows 11
+MENU_TOOLS=도구(&T)
+MENU_TOOLS_THREAD=별도의 스레드에서 윈도우 설정 구성
+MENU_HELP=&Help
+MENU_HELP_HELP=도움말(&H)
+MENU_HELP_WIN_VER=Windows 버전(&W)
+MENU_HELP_ABOUT=Re-Metrics 정보(&A)
+DLG_BORDER_WIDTH=테두리 너비
+DLG_TITLE_BAR_WIDTH=제목 표시줄 너비
+DLG_TITLE_BAR_HEIGHT=제목 표시줄 높이
+DLG_SCROLL_BAR_WIDTH=스크롤 바 너비
+DLG_SCROLL_BAR_HEIGHT=스크롤 바 높이
+DLG_PALETTE_WIDTH=팔레트 너비
+DLG_PALETTE_HEIGHT=팔레트 높이
+DLG_MENU_WIDTH=메뉴 너비
+DLG_MENU_HEIGHT=메뉴 높이
+DLG_WINDOW_PADDING=안쪽 여백이 있는 테두리 너비
+DLG_ICON_HORIZONTAL_MARGIN=아이콘 수평 간격
+DLG_ICON_VERTICAL_MARGIN=아이콘 수직 간격
+DLG_OK=OK
+DLG_CANCEL=취소
+DLG_WINVER_TITLE=Windows 버전
+DLG_ABOUT_TITLE=Re-Metrics 정보
+DLG_ABOUT_VERSION=Re-Metrics 버전 1.34
+DLG_ABOUT_CREDIT=By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021,2022
+DLG_ABOUT_CREDIT2=Translate: Josh Kim (joshkkim@gmail.com)
+MSG_SETTING_FILE=창 설정 파일 (*.ini)
+MSG_ALL_FILE=전체 파일 (*.*)
+MSG_LOAD_FAIL=창 설정 파일 불러오기를 실패했습니다.
+MSG_SAVE_FAIL=창 설정 파일 저장을 실패했습니다.
+MSG_ERROR=오류
+MSG_ABOUT=Re-Metrics 정보
+MSG_NO_WINDOW_BORDER=창 테두리를 입력하세요.
+MSG_NO_TITLEBAR_WIDTH=제목 표시줄 너비를 입력하세요.
+MSG_NO_TITLEBAR_HEIGHT=제목 표시줄 높이를 입력하세요.
+MSG_NO_SCROLL_WIDTH=스크롤 바 너비를 입력하세요.
+MSG_NO_SCROLL_HEIGHT=스크롤 바 높이를 입력하세요.
+MSG_NO_PALETTE_WIDTH=팔레트 너비를 입력하세요.
+MSG_NO_PALETTE_HEIGHT=팔레트 높이를 입력하세요.
+MSG_NO_MENU_WIDTH=메뉴 표시줄 너비를 입력하세요.
+MSG_NO_MENU_HEIGHT=메뉴 표시줄 높이를 입력하세요.
+MSG_NO_WINDOW_PADDING=창 내부 여백을 입력하세요.
+MSG_NO_ICON_HORIZONTAL_MARGIN=수평 아이콘 바깥쪽 여백을 입력하세요.
+MSG_NO_ICON_VERTICAL_MARGIN=수직 아이콘 바깥쪽 여백 없음.

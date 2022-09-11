@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017,2020,2021 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2020,2021,2022 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 #ifndef INIREADER_H
@@ -11,9 +11,7 @@ DWORD GetPrivateProfileStringExT(
 	const char *sectionName,
 	const TCHAR *keyName,
 	const TCHAR *defaultValue,
-	TCHAR *returnString,
-	DWORD returnSize,
-	TCHAR *iniFileName,
-	UINT codePage);
+	tstring &returnString,
+	TCHAR *iniFileName);
 
 #endif

@@ -124,6 +124,16 @@ void initializeLocale(void)
 			_tcscat(helpFileName, _T("English.chm"));
 		}
 	}
+
+	memset(&fileInfo, 0, sizeof(WIN32_FIND_DATA));
+	HANDLE hFound = FindFirstFile(helpFileName, &fileInfo);
+	if (hFound == INVALID_HANDLE_VALUE) {
+		_tcscpy(helpFileName, iniPath);
+		_tcscat(helpFileName, _T("English.chm"));
+	} else {
+		CloseHandle(hFound);
+	}
+
 	// Language support routine ends here.
 	readResourceFile(langFileName);
 }

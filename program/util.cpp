@@ -1,8 +1,9 @@
 ﻿/*
-Re-Metrics (C) 2012-2017,2021 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2021,2022 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 
+#include <assert.h>
 #include "util.h"
 #include "iniReader.h"
 
@@ -20,19 +21,12 @@ int codePage = 0;
  */
 void readResourceItem(TCHAR *file, const TCHAR *key, const TCHAR *fallback)
 {
-	TCHAR buf[255];
-	int len = 0;
+	tstring buf;
+	int len;
 
-	if (_tcslen(file) != 0) {
-		// INIファイルを読み込む。Unicode版のAPIでもファイルが非Unicodeの場合は
-		// 各言語の文字コードのファイルとして読んでくれる。
-		if (codePage == 0) {
-			len = GetPrivateProfileString(_T("RESOURCE"), key, _T(""), buf, 255, file);
-		}
-		else {
-			len = GetPrivateProfileStringExT("RESOURCE", key, _T(""), buf, 255, file, codePage);
-		}
-	}
+	// INIファイルを読み込む。Unicode版のAPIでもファイルが非Unicodeの場合は
+	// 各言語の文字コードのファイルとして読んでくれる。
+	len = GetPrivateProfileStringExT("RESOURCE", key, _T(""), buf, file);
 
 	if (len > 0) {
 		langResource.push_back(buf);
@@ -167,10 +161,10 @@ void readResourceFile(TCHAR *file)
 		_T("About Re-Metrics")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_VERSION"),
-		_T("Re-Metrics Version 1.33")
+		_T("Re-Metrics Version 1.34")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT"),
-		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021")
+		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021,2022")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT2"),
 		_T("Translate:Tatsu")
@@ -234,5 +228,107 @@ void readResourceFile(TCHAR *file)
 	readResourceItem(file, _T("MENU_PRESET_11"),
 		_T("Windows 11")
 	);
+}
+
+/**
+ * charをunsignedとみなしてintに変換する
+ *
+ * @param c 変換するchar
+ * @return cをunsignedとみなして変換した値
+ */
+inline int charToInt(char c)
+{
+	if (c < 0) {
+		return 256 + c;
+	}
+	else {
+		return c;
+	}
+
+}
+
+/**
+ * UTF-8文字列をUTF-16文字列に変換する
+ *
+ * @param src 変換元UTF-8文字列
+ * @param dst 変換先領域(NULL可能)
+ * @return 必要となるwchar_tの個数
+ */
+size_t utf8toUtf16(tstring& dst, const char* src)
+{
+	wchar_t wc;
+	int shift_count;
+	int i;
+
+	assert(src != NULL);
+
+	while (*src) {
+		// Extruct to Unicode
+		int c = charToInt(*src);
+
+		wc = 0;
+		if (c < 0x80) {
+			// 1byte(7bit)
+			wc = c;
+			shift_count = 0;
+		}
+		else if (c >= 0xfc) {
+			// 6bytes(27-32bit:no use)
+			wc = c & 0x01;
+			shift_count = 5;
+		}
+		else if (c >= 0xf8) {
+			// 5bytes(22-26bit:no use)
+			wc = c & 0x03;
+			shift_count = 4;
+		}
+		else if (c >= 0xf0) {
+			// 4bytes(17-21bit)
+			wc = c & 0x07;
+			shift_count = 3;
+		}
+		else if (c >= 0xe0) {
+			// 3bytes(12-16bit)
+			wc = c & 0x0f;
+			shift_count = 2;
+		}
+		else if (c >= 0xc0) {
+			// 2bytes(8-11bit)
+			wc = c & 0x1f;
+			shift_count = 1;
+		}
+		else {
+			break;
+		}
+
+		src++;
+		for (i = 0; i < shift_count; i++) {
+			if (*src == '\0') {
+				wc = L'\0';
+				break;
+			}
+			c = charToInt(*src);
+
+			wc = wc << 6;
+			wc = wc | (c & 0x3f);
+			src++;
+		}
+
+		if (c >= 0x10000) {
+			// Windows uses UTF-16 LE
+			int c1 = (c & 0x3ff) | 0xdc00;
+			int c2_1 = (c >> 10) | 0x3f;
+			int c2_2 = ((c >> 16) & 0x1f) - 1;
+			int c2 = 0xd800 | c2_2 | c2_1;
+
+			dst += c1;
+			dst += c2;
+		}
+		else {
+			dst += wc;
+		}
+	}
+
+	return dst.length();
 }
 
