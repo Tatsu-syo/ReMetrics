@@ -64,4 +64,4 @@ MSG_NO_MENU_WIDTH=Please input menu bar width.
 MSG_NO_MENU_HEIGHT=Please input menu bar height.
 MSG_NO_WINDOW_PADDING=Please input window padding.
 MSG_NO_ICON_HORIZONTAL_MARGIN=Please input horizontal icon margin.
-MSG_NO_ICON_VERTICAL_MARGIN=No vertical icon margin.
+MSG_NO_ICON_VERTICAL_MARGIN=Please input vertical icon margin.
