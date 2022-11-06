@@ -1,10 +1,10 @@
 ﻿Re-Metrics
-By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021
+By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021,2022
 
 [What's this?]
 This program sets window settings on Windows 8.1/10/11.
 
-[Required programs]
+[Required programs for compile]
 ・Visual Studio 2008/2019/2022
 
 [Source Files]
@@ -25,7 +25,7 @@ help/*/* : Source files for help file.
 3.Build files.
 
 [license]
-MIT license(http://opensource.org/licenses/mit-license.php)に従います。
+MIT license(http://opensource.org/licenses/mit-license.php)
 
 [Author]
 Tatsuhiko Syoji
