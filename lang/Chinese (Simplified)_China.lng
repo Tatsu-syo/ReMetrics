@@ -1,0 +1,67 @@
+; Re-Metrics (C) 2012-2022 Tatsuhiko Shoji
+; The sources for Re-Metrics are distributed under the MIT open source license
+
+;In RESOURCE section,
+;FONT_FACE key is dialog font name, other key is message.
+[RESOURCE]
+FONT_FACE=Segoe UI
+FONT_CHARSET=0
+TITLE=Re-Metrics
+MENU_FILE=文件(&F)
+MENU_FILE_LOAD=(&O)加载窗口设置...
+MENU_FILE_SAVE=(&A)保存窗口设置...
+MENU_FILE_SET_QUIT=(&S)设置各窗口然后退出
+MENU_FILE_QUIT=退出(&X)
+MENU_PRESET=预设(&P)
+MENU_PRESET_2000=Windows 2000
+MENU_PRESET_XP_CLASSIC=Windows XP Classic
+MENU_PRESET_XP=Windows XP
+MENU_PRESET_VISTA=Windows Vista
+MENU_PRESET_7_BASIC=Windows 7 Basic
+MENU_PRESET_7=Windows 7
+MENU_PRESET_8=Windows 8/8.1
+MENU_PRESET_10=Windows 10
+MENU_PRESET_11=Windows 11
+MENU_TOOLS=工具(&T)
+MENU_TOOLS_THREAD=在单独的线程中改变窗口宽度和高度
+MENU_HELP=帮助(&H)
+MENU_HELP_HELP=显示帮助(&C)
+MENU_HELP_WIN_VER=Windows版本(&W)
+MENU_HELP_ABOUT=&关于Re-Metrics
+DLG_BORDER_WIDTH=窗口宽度。
+DLG_TITLE_BAR_WIDTH=标题栏宽度
+DLG_TITLE_BAR_HEIGHT=标题栏高度
+DLG_SCROLL_BAR_WIDTH=滚动条宽度
+DLG_SCROLL_BAR_HEIGHT=滚动条高度
+DLG_PALETTE_WIDTH=调色板宽度
+DLG_PALETTE_HEIGHT=调色板高度
+DLG_MENU_WIDTH=菜单栏宽度
+DLG_MENU_HEIGHT=菜单栏高度
+DLG_WINDOW_PADDING=内外边框宽度
+DLG_ICON_HORIZONTAL_MARGIN=水平图标间距
+DLG_ICON_VERTICAL_MARGIN=垂直图标间距
+DLG_OK=确定
+DLG_CANCEL=取消
+DLG_WINVER_TITLE=Windows版本
+DLG_ABOUT_TITLE=关于Re-Metrics
+DLG_ABOUT_VERSION=Re-Metrics （翻译时）版本：1.34
+DLG_ABOUT_CREDIT=作者：Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021,2022
+DLG_ABOUT_CREDIT2=中文(简体)翻译:GodGun968(神枪968)
+MSG_SETTING_FILE=窗口设置文件(*.ini)
+MSG_ALL_FILE=所有文件(*.*)
+MSG_LOAD_FAIL=窗口设置文件加载失败。
+MSG_SAVE_FAIL=窗口设置文件保存失败。
+MSG_ERROR=错误
+MSG_ABOUT=关于Re-Metrics
+MSG_NO_WINDOW_BORDER=请输入窗口宽度。
+MSG_NO_TITLEBAR_WIDTH=请输入标题栏宽度。
+MSG_NO_TITLEBAR_HEIGHT=请输入标题栏高度。
+MSG_NO_SCROLL_WIDTH=请输入滚动条宽度。
+MSG_NO_SCROLL_HEIGHT=请输入滚动条高度。
+MSG_NO_PALETTE_WIDTH=请输入调色板宽度。
+MSG_NO_PALETTE_HEIGHT=请输入调色板高度。
+MSG_NO_MENU_WIDTH=请输入菜单栏宽度。
+MSG_NO_MENU_HEIGHT=请输入菜单栏高度。
+MSG_NO_WINDOW_PADDING=请输入窗口内外边框内侧宽度。
+MSG_NO_ICON_HORIZONTAL_MARGIN=请输入水平图标间距。
+MSG_NO_ICON_VERTICAL_MARGIN=请输入垂直图标间距。
