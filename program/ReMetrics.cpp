@@ -1,5 +1,5 @@
 /*
-Re-Metrics (C) 2012-2017,2020,2021 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2020,2021,2023 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 // ReMetrics.cpp : アプリケーションのエントリ ポイントを定義します。
@@ -605,7 +605,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("0");
 			iconHMergin = _T("46");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_XP:
 			borderWidth = _T("1");
@@ -620,7 +620,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("0");
 			iconHMergin = _T("46");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_XP_LUNA:
 			borderWidth = _T("1");
@@ -635,7 +635,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("0");
 			iconHMergin = _T("46");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_VISTA:
 			borderWidth = _T("1");
@@ -650,7 +650,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("4");
 			iconHMergin = _T("46");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_7_STD:
 			borderWidth = _T("1");
@@ -665,7 +665,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("4");
 			iconHMergin = _T("68");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_7:
 			borderWidth = _T("1");
@@ -680,7 +680,7 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("4");
 			iconHMergin = _T("68");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_8:
 			borderWidth = _T("1");
@@ -695,15 +695,15 @@ INT_PTR ReMetrics::OnCommand(WPARAM wParam, LPARAM lParam)
 			padding = _T("4");
 			iconHMergin = _T("68");
 			iconVMergin = _T("43");
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_10:
 			setWin10Setting();
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_SET_11:
 			setWin11Setting();
-			UpdateData(false);
+			applyDPIAndSet(false);
 			return (INT_PTR)0;
 		case IDM_OPEN:
 			OnLoad();
@@ -789,6 +789,31 @@ void ReMetrics::setWin11Setting()
 	iconHMergin = _T("100");
 	iconVMergin = _T("75");
 }
+
+/**
+ * 入力値にDPIを反映して画面に設定する。
+ *
+ * @param toObj true:コントロール→オブジェクト false:オブジェクト→コントロール
+ */
+void ReMetrics::applyDPIAndSet(bool toObj)
+{
+	// ここにダイアログのコントロールと同期を取るメンバ変数を記述します。
+
+	// DPIを適用した値を設定する。
+	borderWidth = std::to_wstring((int)round(_tstof(borderWidth.c_str()) * ((double)dpiY / 96.0)));
+	titleWidth = std::to_wstring((int)round(_tstof(titleWidth.c_str()) * ((double)dpiY / 96.0)));
+	titleHeight = std::to_wstring((int)round(_tstof(titleHeight.c_str()) * ((double)dpiY / 96.0)));
+	scrollWidth = std::to_wstring((int)round(_tstof(scrollWidth.c_str()) * ((double)dpiY / 96.0)));
+	scrollHeight = std::to_wstring((int)round(_tstof(scrollHeight.c_str()) * ((double)dpiY / 96.0)));
+	paletteWidth = std::to_wstring((int)round(_tstof(paletteWidth.c_str()) * ((double)dpiY / 96.0)));
+	paletteHeight = std::to_wstring((int)round(_tstof(paletteHeight.c_str()) * ((double)dpiY / 96.0)));
+	menuWidth = std::to_wstring((int)round(_tstof(menuWidth.c_str()) * ((double)dpiY / 96.0)));
+	menuHeight = std::to_wstring((int)round(_tstof(menuHeight.c_str()) * ((double)dpiY / 96.0)));
+	padding = std::to_wstring((int)round(_tstof(padding.c_str()) * ((double)dpiY / 96.0)));
+
+	UpdateData(toObj);
+}
+
 
 /**
  * 「ヘルプ」－「バージョン情報」選択時の処理
