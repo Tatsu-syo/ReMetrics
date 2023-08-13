@@ -1,5 +1,5 @@
 ﻿/*
-Re-Metrics (C) 2012-2017,2021,2022 Tatsuhiko Shoji
+Re-Metrics (C) 2012-2017,2021,2022,2023 Tatsuhiko Shoji
 The sources for Re-Metrics are distributed under the MIT open source license
 */
 
@@ -161,10 +161,10 @@ void readResourceFile(TCHAR *file)
 		_T("About Re-Metrics")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_VERSION"),
-		_T("Re-Metrics Version 1.34")
+		_T("Re-Metrics Version 1.36")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT"),
-		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021,2022")
+		_T("By Tatsuhiko Syoji(Tatsu) 2012-2017,2020-2023")
 	);
 	readResourceItem(file, _T("DLG_ABOUT_CREDIT2"),
 		_T("Translate:Tatsu")
