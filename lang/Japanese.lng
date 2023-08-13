@@ -1,4 +1,4 @@
-; Re-Metrics (C) 2012-2022 Tatsuhiko Shoji
+; Re-Metrics (C) 2012-2023 Tatsuhiko Shoji
 ; The sources for Re-Metrics are distributed under the MIT open source license
 
 ;In RESOURCE section,
@@ -44,8 +44,8 @@ DLG_OK=OK
 DLG_CANCEL=キャンセル
 DLG_WINVER_TITLE=Windowsのバージョン
 DLG_ABOUT_TITLE=Re-Metricsについて
-DLG_ABOUT_VERSION=Re-Metrics Version 1.35
-DLG_ABOUT_CREDIT=By Tatsuhiko Syoji(Tatsu) 2012-2017,2020,2021
+DLG_ABOUT_VERSION=Re-Metrics Version 1.36
+DLG_ABOUT_CREDIT=By Tatsuhiko Syoji(Tatsu) 2012-2017,2020-2023
 DLG_ABOUT_CREDIT2=Translate:Tatsu
 MSG_SETTING_FILE=設定ファイル(*.ini)
 MSG_ALL_FILE=すべてのファイル(*.*)
